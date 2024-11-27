@@ -1,7 +1,7 @@
 import tkinter as tk
 import platform
 import json
-from widget import TaskWidget
+from widgets import TaskWidget, Button 
 from theme_loader import ThemeManager
 
 # -- For the black title bar -- #
@@ -46,8 +46,8 @@ class App(tk.Tk):
         w.pack()
 
         # -- Theme Switcher -- #
-        theme_button = tk.Button(left_frame, text="Switch Theme", command=self.switch_theme)
-        theme_button.pack(pady=10)
+        theme_button = Button(left_frame, text="Switch Theme", bg=self.theme['left_frame'], width=180, command=self.switch_theme)
+        theme_button.place(x=10, y=10)
 
     def switch_theme(self):
         current_theme = self.theme_manager.current_theme_name
