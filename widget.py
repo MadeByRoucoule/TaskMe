@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class TaskWidget():
-    def __init__(self, parent, width=150, height=100, r=25, color='#399399', fg='#FFFFFF', bg='#2B2B2B'):
+    def __init__(self, parent, width=150, height=100, r=25, color='#399399', fg='#FFFFFF', bg='#1B1B1B'):
 
         self.parent = parent
         self.width = width
