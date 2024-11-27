@@ -1,0 +1,12 @@
+{
+    "themes":[
+        {
+            "name":"Default Dark",
+            "path":"themes/default_dark.json"
+        },
+        {
+            "name":"Default Light",
+            "path":"themes/default_light.json"
+        }
+    ]
+}
