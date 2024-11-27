@@ -23,12 +23,22 @@ class App(tk.Tk):
         # -- Top Section -- #
 
         top_frame = tk.Frame(self, bg='#2B2B2B', width=1000, height=50)
-        top_frame.grid(row=0, column=0, columnspan=2)
+        top_frame.pack(side='top')
 
-        # -- Main Section -- #
+        # -- Bottom Section -- #
 
-        main_frame = tk.Frame(self, bg='#1B1B1B')
-        main_frame.grid(row=1, column=0)
+        bottom_frame = tk.Frame(self, width=1000, height=550)
+        bottom_frame.pack(side='bottom', fill='both', expand=True)
+
+        # -- Left Frame -- #
+
+        left_frame = tk.Frame(bottom_frame, bg='#222222', width=200)
+        left_frame.pack(side='left', fill='y')
+        
+        # -- Main Frame -- #
+
+        main_frame = tk.Frame(bottom_frame, bg='#1B1B1B')
+        main_frame.pack(side='right', fill='both', expand=True)
 
         w = TaskWidget(main_frame)
         w.pack()
