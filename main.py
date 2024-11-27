@@ -11,7 +11,7 @@ if platform.system() == 'Windows':
 class App(tk.Tk):
     def __init__(self, *arg, **kwargs):
         tk.Tk.__init__(self, *arg, **kwargs)
-        self.title('TaskMe')
+        self.title('Task·Me')
         self.geometry("1000x600")
         
         self.theme_manager = ThemeManager()
@@ -46,8 +46,25 @@ class App(tk.Tk):
         w.pack()
 
         # -- Theme Switcher -- #
-        theme_button = Button(left_frame, text="Switch Theme", bg=self.theme['left_frame'], width=180, command=self.switch_theme)
+        theme_button = Button(left_frame, text="Switch Theme", width=180, command=self.add_task_window)
         theme_button.place(x=10, y=10)
+
+    def add_task_window(self):
+
+        newtaskWindow = tk.Tk()
+        width, height = 250, 250
+        posx, posy = ( self.winfo_x() + self.winfo_width()//2 ) - width // 2, ( self.winfo_y() + self.winfo_height()//2 ) - height // 2
+
+        newtaskWindow.title('Add·Task')
+        newtaskWindow.geometry(f'{width}x{height}+{posx}+{posy}')
+        newtaskWindow.resizable(False, False)
+        newtaskWindow.configure(bg=self.theme['top_frame'])
+        title_bar_color.set(newtaskWindow, self.theme['title_bar'])
+        minimize_button.disable(newtaskWindow)
+                        
+        
+
+        newtaskWindow.mainloop()
 
     def switch_theme(self):
         current_theme = self.theme_manager.current_theme_name

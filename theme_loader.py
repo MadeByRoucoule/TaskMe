@@ -8,13 +8,13 @@ class ThemeManager:
         self.load_current_theme()
     
     def load_themes(self):
-        with open('themes.json', 'r') as s:
-            themes_file = json.load(s)
+        with open('json/themes.json', 'r') as t:
+            themes_file = json.load(t)
         return themes_file['themes']
 
     def load_current_theme(self):
         try:
-            with open('settings.json', 'r') as s:
+            with open('json/settings.json', 'r') as s:
                 settings = json.load(s)
                 self.set(settings['current_theme'])
         except (FileNotFoundError, json.JSONDecodeError):
@@ -23,7 +23,7 @@ class ThemeManager:
 
     def save_current_theme(self):
         settings = {'current_theme': self.current_theme_name}
-        with open('settings.json', 'w') as s:
+        with open('json/settings.json', 'w') as s:
             json.dump(settings, s, indent=4)
 
     def set(self, new_theme_name):
