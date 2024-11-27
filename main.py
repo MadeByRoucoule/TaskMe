@@ -1,6 +1,6 @@
 import tkinter as tk
 import platform
-
+from widgets import TaskWidget
 
 # -- For the black title bar --
 if platform.system()=='Windows':
@@ -15,6 +15,9 @@ class App(tk.Tk):
 
         if platform.system()=='Windows':
             title_bar_color.set(self, '#2B2B2B')
+
+        w = TaskWidget(parent=self)
+        w.pack()
 
 if __name__ == "__main__":
     app = App()
