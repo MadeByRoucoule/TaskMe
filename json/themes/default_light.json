@@ -3,5 +3,10 @@
     "title_bar": "#D0D0D0",
     "top_frame": "#D0D0D0",
     "left_frame": "#E0E0E0",
-    "main_frame": "#F0F0F0"
+    "main_frame": "#F0F0F0",
+    "fg":"#000000",
+    "button": "#C0C0C0",
+    "hover_button": "#B0B0B0",
+    "entry": "#FEFEFE",
+    "entry_border": "#C0C0C0"
 }

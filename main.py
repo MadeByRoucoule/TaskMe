@@ -1,7 +1,7 @@
 import tkinter as tk
 import platform
 import json
-from widgets import TaskWidget, Button 
+import widgets
 from theme_loader import ThemeManager
 
 # -- For the black title bar -- #
@@ -42,12 +42,18 @@ class App(tk.Tk):
         main_frame = tk.Frame(bottom_frame, bg=self.theme['main_frame'])
         main_frame.pack(side='right', fill='both', expand=True)
 
-        w = TaskWidget(main_frame, bg=self.theme['main_frame'])
+        w = widgets.TaskWidget(main_frame, bg=self.theme['main_frame'])
         w.pack()
 
+        theme_button = widgets.Button(left_frame, text="New task", color=self.theme['button'], hover_color=self.theme['hover_button'], fg=self.theme['fg'], width=180, command=self.add_task_window)
+        theme_button.place(x=10, y=50)
+
         # -- Theme Switcher -- #
-        theme_button = Button(left_frame, text="Switch Theme", width=180, command=self.add_task_window)
+        theme_button = widgets.Button(left_frame, text="Switch Theme", color=self.theme['button'], hover_color=self.theme['hover_button'], fg=self.theme['fg'], width=180, command=self.switch_theme)
         theme_button.place(x=10, y=10)
+
+        entry = widgets.Entry(left_frame, color=self.theme['entry'], border_color=self.theme['entry_border'], fg=self.theme['fg'], width=180)
+        entry.place(x=10, y=90)
 
     def add_task_window(self):
 
@@ -61,8 +67,10 @@ class App(tk.Tk):
         newtaskWindow.configure(bg=self.theme['top_frame'])
         title_bar_color.set(newtaskWindow, self.theme['title_bar'])
         minimize_button.disable(newtaskWindow)
-                        
         
+        print(newtaskWindow.cget('bg'))
+        entry1 = widgets.Entry(newtaskWindow, placeholder_text='Name', color=self.theme['entry'], border_color=self.theme['entry_border'], fg=self.theme['fg'], width=230)
+        entry1.place(x=10, y=10)
 
         newtaskWindow.mainloop()
 

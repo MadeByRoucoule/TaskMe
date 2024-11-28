@@ -92,8 +92,81 @@ class Button():
         self.c.grid(**kwargs)
 
 class Entry():
-    def __init__(self):
-        pass
+    def __init__(self, parent, 
+                 font=('San Francisco', 10),
+                 placeholder_text = 'Entry', 
+                 placeholder_color = '#888888',
+                 width=100, 
+                 height=30, 
+                 r=30, 
+                 color='#4C4C4C', 
+                 fg='#FFFFFF', 
+                 bg='', 
+                 border_color='#343434', 
+                 border_width=2):
+
+        self.parent = parent
+        self.font = font
+        self.placeholder_text = placeholder_text
+        self.placeholder_color = placeholder_color
+        self.width = width
+        self.height = height
+        self.r = r
+        self.color = color
+        self.fg = fg
+        self.bg = bg or self.parent.cget('bg')
+        self.border_color = border_color
+        self.border_width = border_width
+
+        self.c = tk.Canvas(self.parent, bg=self.bg, highlightthickness=0)
+
+        self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.width//8)
+        self.e.insert(0, self.placeholder_text)
+        self.e.bind("<FocusIn>", self.on_entry_click)
+        self.e.bind("<FocusOut>", self.on_focusout)
+        self.e.config(fg=self.placeholder_color)
+        self.c.create_window(self.width // 2, self.height // 2, window=self.e, anchor='center', tags='entry_window')
+
+        create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.border_color, tags='border_rect')
+        create_rounded_rectangle(self.c, self.border_width, self.border_width, self.width-self.border_width, self.height-self.border_width, radius=self.r, fill=self.color, tags='entry_rect')
+        self.c.create_rectangle(0, 0, width, height, fill='', outline='', tags='hitbox')
+
+        self.c.tag_bind('hitbox', '<Button-1>', self.on_entry_click)
+
+    def on_entry_click(self, event):
+        if self.e.get() == self.placeholder_text:
+            self.e.focus()
+            self.e.delete(0, "end")
+            self.e.insert(0, '')
+            self.e.config(fg=self.fg)
+
+    def on_focusout(self, event):
+        if self.e.get() == '':
+            self.e.insert(0, self.placeholder_text)
+            self.e.config(fg=self.placeholder_color)
+
+    def pack(self, **kwargs):
+        self.c.pack(**kwargs)
+    
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+
+    def grid(self, **kwargs):
+        self.c.grid(**kwargs)
+
+    def get(self):
+        if self.e.get() == self.placeholder_text:
+            return ''
+        return self.e.get()
+
+    def set(self, value):
+        self.e.delete(0, tk.END)
+        self.e.insert(0, value)
+        if value:
+            self.e.config(fg=self.fg)
+        else:
+            self.e.insert(0, self.placeholder_text)
+            self.e.config(fg=self.placeholder_color)
 
 def create_rounded_rectangle(canvas, x1, y1, x2, y2, radius, **kwargs):
         points = [x1+radius, y1,
