@@ -65,11 +65,11 @@ class App(tk.Tk):
         newtaskWindow.geometry(f'{width}x{height}+{posx}+{posy}')
         newtaskWindow.resizable(False, False)
         newtaskWindow.configure(bg=self.theme['top_frame'])
+
         if platform.system() == 'Windows':
             title_bar_color.set(newtaskWindow, self.theme['title_bar'])
             minimize_button.disable(newtaskWindow)
         
-        print(newtaskWindow.cget('bg'))
         entry1 = widgets.Entry(newtaskWindow, placeholder_text='Name', color=self.theme['entry'], border_color=self.theme['entry_border'], fg=self.theme['fg'], width=230)
         entry1.place(x=10, y=10)
 
