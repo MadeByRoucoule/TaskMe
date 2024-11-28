@@ -21,6 +21,7 @@ class App(tk.Tk):
     def apply_theme(self):
         self.theme = self.theme_manager.get_current_theme()
         self.configure(bg=self.theme['background'])
+        print(platform.system())
         if platform.system() == 'Windows':
             title_bar_color.set(self, self.theme['title_bar'])
 

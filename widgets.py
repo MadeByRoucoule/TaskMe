@@ -120,11 +120,12 @@ class Entry():
         self.border_width = border_width
 
         self.c = tk.Canvas(self.parent, bg=self.bg, highlightthickness=0)
+
         if platform.system() == 'Windows':
-            self.entry_width == self.width//8
+            self.entry_width = self.width//8
         elif platform.system() == '':
-             self.entry_width == self.width//8
-             
+            self.entry_width = self.width//8
+
         self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.width//8)
         self.e.insert(0, self.placeholder_text)
         self.e.bind("<FocusIn>", self.on_entry_click)
