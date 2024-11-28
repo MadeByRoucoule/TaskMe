@@ -1,6 +1,5 @@
 import tkinter as tk
 import platform
-import json
 import widgets
 from theme_loader import ThemeManager
 
