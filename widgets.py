@@ -2,9 +2,14 @@ import tkinter as tk
 import platform
 
 class TaskWidget():
-    def __init__(self, parent, width=150, height=100, r=25, color='#399399', fg='#FFFFFF', bg=''):
+    def __init__(self, parent, text, date, hour, priority, font=('San Francisco', 10), width=200, height=100, r=25, color='#399399', fg='#FFFFFF', bg=''):
 
         self.parent = parent
+        self.text = text
+        self.date = date
+        self.hour = hour
+        self.priority = priority
+        self.font = font
         self.width = width
         self.height = height
         self.r = r
@@ -25,7 +30,11 @@ class TaskWidget():
         self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
         
         create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.color)
-    
+        self.c.create_text(10, 10, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), anchor='nw')
+        self.c.create_text(15, 30, text=f'Date: {self.date}', fill=self.fg, font=self.font, anchor='nw')
+        self.c.create_text(15, 50, text=f'Heure : {self.hour}', fill=self.fg, font=self.font, anchor='nw')
+        self.c.create_text(15, 70, text=f'Priorité : {self.priority}', fill=self.fg, font=self.font, anchor='nw')
+
     def pack(self, **kwargs):
         self.c.pack(**kwargs)
     
@@ -123,8 +132,8 @@ class Entry():
 
         if platform.system() == 'Windows':
             self.entry_width = self.width//8
-        elif platform.system() == '':
-            self.entry_width = self.width//8
+        elif platform.system() == 'Linux':
+            self.entry_width = self.width//6
 
         self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.width//8)
         self.e.insert(0, self.placeholder_text)
