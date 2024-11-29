@@ -130,7 +130,7 @@ class Entry():
 
         self.c = tk.Canvas(self.parent, bg=self.bg, highlightthickness=0)
 
-        self.entry_width = round(1.33*self.width)
+        self.entry_width = 20
 
         self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.entry_width)
         self.e.insert(0, self.placeholder_text)
