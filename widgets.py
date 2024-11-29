@@ -46,7 +46,7 @@ class TaskWidget():
         
         self.c.create_text(15, 15, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), width=self.width-15*2, anchor='nw')
         self.c.create_text(10, 80, text=self.date, fill=self.fg, font=self.font, anchor='nw')
-        self.c.create_text(75, 80, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='nw')
+        self.c.create_text(80, 80, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='nw')
         self.c.create_text(self.width-10, 80, text=f'Priorité : {self.priority}', fill=self.fg, font=self.font, anchor='ne')
     
     # -- Utility Methods -- #
