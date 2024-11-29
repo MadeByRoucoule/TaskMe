@@ -16,7 +16,7 @@ def create_rounded_rectangle(canvas: tk.Canvas, x1: int, y1: int, x2: int, y2: i
 class TaskWidget():
     def __init__(self, parent, text: str, date: str, hour: str, priority: str,
                  font: Tuple[str, int] = ('San Francisco', 10), width: int = 200, height: int = 100,
-                 r: int = 25, color: str = '', fg: str = '#FFFFFF', bg: str = '', priority_colors: list = ['#800008', '#806000', '#1a8000']):
+                 r: int = 25, color: str = '', fg: str = '#FFFFFF', bg: str = '', priority_colors: list = ['#3E2825', '#403324', '#23312A']):
 
         # -- Initialization -- #
         self.parent = parent
@@ -43,10 +43,11 @@ class TaskWidget():
             create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.priority_color[1])
         elif not self.color and self.priority == 'Low':
             create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.priority_color[2])
-        self.c.create_text(10, 10, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), anchor='nw')
-        self.c.create_text(15, 30, text=f'Date: {self.date}', fill=self.fg, font=self.font, anchor='nw')
-        self.c.create_text(15, 50, text=f'Heure : {self.hour}', fill=self.fg, font=self.font, anchor='nw')
-        self.c.create_text(15, 70, text=f'Priorité : {self.priority}', fill=self.fg, font=self.font, anchor='nw')
+        
+        self.c.create_text(15, 15, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), width=self.width-15*2, anchor='nw')
+        self.c.create_text(10, 80, text=self.date, fill=self.fg, font=self.font, anchor='nw')
+        self.c.create_text(75, 80, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='nw')
+        self.c.create_text(self.width-10, 80, text=f'Priorité : {self.priority}', fill=self.fg, font=self.font, anchor='ne')
     
     # -- Utility Methods -- #
     def _get_parent_bg(self) -> str:
