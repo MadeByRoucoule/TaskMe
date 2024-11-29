@@ -130,12 +130,9 @@ class Entry():
 
         self.c = tk.Canvas(self.parent, bg=self.bg, highlightthickness=0)
 
-        if platform.system() == 'Windows':
-            self.entry_width = self.width//8
-        elif platform.system() == 'Linux':
-            self.entry_width = self.width//6
+        self.entry_width = round(1.33*self.width)
 
-        self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.width//8)
+        self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.entry_width)
         self.e.insert(0, self.placeholder_text)
         self.e.bind("<FocusIn>", self.on_entry_click)
         self.e.bind("<FocusOut>", self.on_focusout)
