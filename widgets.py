@@ -113,7 +113,8 @@ class Entry():
                  fg='#FFFFFF', 
                  bg='', 
                  border_color='#343434', 
-                 border_width=2):
+                 border_width=2,
+                 entry_width=20):
 
         self.parent = parent
         self.font = font
@@ -127,10 +128,10 @@ class Entry():
         self.bg = bg or self.parent.cget('bg')
         self.border_color = border_color
         self.border_width = border_width
+        self.entry_width = round(self.width/9)
 
         self.c = tk.Canvas(self.parent, bg=self.bg, highlightthickness=0)
 
-        self.entry_width = 20
 
         self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.entry_width)
         self.e.insert(0, self.placeholder_text)
