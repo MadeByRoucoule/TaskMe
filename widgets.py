@@ -45,9 +45,9 @@ class TaskWidget():
             create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.priority_color[2])
         
         self.c.create_text(15, 15, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), width=self.width-15*2, anchor='nw')
-        self.c.create_text(10, 80, text=self.date, fill=self.fg, font=self.font, anchor='nw')
-        self.c.create_text(80, 80, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='nw')
-        self.c.create_text(self.width-10, 80, text=self.priority, fill=self.fg, font=('San Francisco', 10, 'bold'), anchor='ne')
+        self.c.create_text(10, self.height-10, text=self.date, fill=self.fg, font=self.font, anchor='sw')
+        self.c.create_text(80, self.height-10, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='sw')
+        self.c.create_text(self.width-10, self.height-10, text=self.priority, fill=self.fg, font=('San Francisco', 10, 'bold'), anchor='se')
     
     # -- Utility Methods -- #
     def _get_parent_bg(self) -> str:
