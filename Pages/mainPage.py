@@ -1,5 +1,7 @@
 import tkinter as tk
-import random
+import platform
+if platform.system() == 'Windows':
+    from hPyT import *
 import widgets
 from Managers.tasksManager import TasksManager
 
@@ -55,10 +57,15 @@ class MainPage:
                 x = x + 250 + 10
 
     def add_task(self):
-        top_level = tk.Toplevel(self.parent, bg=self.theme['background'])
+
         width, height = 250, 250
         posx, posy = ( self.parent.winfo_x() + self.parent.winfo_width()//2 ) - width // 2, ( self.parent.winfo_y() + self.parent.winfo_height()//2 ) - height // 2
+
+        top_level = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
         top_level.title('Add·Task')
         top_level.geometry(f'{width}x{height}+{posx}+{posy}')
-        top_level.geometry()
-        top_level.wm_overrideredirect(True) 
+        top_level.resizable(False, False)
+
+        if platform.system() == 'Windows':
+            all_stuffs.hide(top_level)
+            title_bar_color.set(top_level, self.theme['title_bar'])
