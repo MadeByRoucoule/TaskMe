@@ -10,7 +10,7 @@ class MainPage:
         self.theme = theme
 
         self.frames()
-        
+        self.widgets()
         
         # tm.get_tasks_infos()
 
@@ -32,7 +32,9 @@ class MainPage:
         self.main_frame = tk.Frame(self.bottom_frame, bg=self.theme['main_frame'])
         self.main_frame.pack(side='right', fill='both', expand=True)
 
-        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['colored_button'], hover_color=self.theme['hover_colored_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.btn)
+    def widgets(self):
+
+        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['colored_button'], hover_color=self.theme['hover_colored_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
         task_manager = TasksManager()
@@ -41,9 +43,7 @@ class MainPage:
         y = 10
         x = 10
         tasks_per_row = 3
-
         for task in tasks['tasks']:
-
             w = widgets.TaskWidget(self.main_frame, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250)
             w.place(x=x, y=y)
             tasks_per_row -= 1
@@ -53,7 +53,12 @@ class MainPage:
                 tasks_per_row = 3
             else:
                 x = x + 250 + 10
-            
 
-    def btn(self):
-        print('Pressed')
+    def add_task(self):
+        top_level = tk.Toplevel(self.parent, bg=self.theme['background'])
+        width, height = 250, 250
+        posx, posy = ( self.parent.winfo_x() + self.parent.winfo_width()//2 ) - width // 2, ( self.parent.winfo_y() + self.parent.winfo_height()//2 ) - height // 2
+        top_level.title('Add·Task')
+        top_level.geometry(f'{width}x{height}+{posx}+{posy}')
+        top_level.geometry()
+        top_level.wm_overrideredirect(True) 
