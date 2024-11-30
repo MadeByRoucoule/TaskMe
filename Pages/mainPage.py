@@ -36,7 +36,7 @@ class MainPage:
 
     def widgets(self):
 
-        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['colored_button'], hover_color=self.theme['hover_colored_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
+        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
         task_manager = TasksManager()
@@ -77,8 +77,10 @@ class MainPage:
         self.hour_entry = widgets.Entry(self.add_task_win, placeholder_text='Hour (ex: 12h00)', width=200)
         self.hour_entry.pack(pady=(5,10))
 
-        self.done_btn = widgets.Button(self.add_task_win, text='Done', width=200,command=self.add_task_done)
-        self.done_btn.pack(side='bottom', pady=10)
+        self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], width=200,command=lambda: self.add_task_win.destroy())
+        self.cancel_btn.pack(side='bottom', pady=(5,10))
+        self.done_btn = widgets.Button(self.add_task_win, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=200,command=self.add_task_done)
+        self.done_btn.pack(side='bottom', pady=(10,5))
 
     def add_task_done(self):
 
