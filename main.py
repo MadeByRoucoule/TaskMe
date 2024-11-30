@@ -48,7 +48,7 @@ class App(tk.Tk):
         # -- Main Frame -- #
         main_frame = tk.Frame(bottom_frame, bg=self.theme['main_frame'])
         main_frame.pack(side='right', fill='both', expand=True)
-
+        
         # -- Tasks Frames -- #
         today_frame = tk.Frame(main_frame, bg=self.theme['main_frame'])
         today_frame.pack(fill='x', padx=10, pady=(10, 5))
@@ -62,8 +62,14 @@ class App(tk.Tk):
         tasks = self.task_manager.get_tasks()
         today = datetime.now().date()
 
-        today_tasks = [task for task in tasks if datetime.strptime(task['date'], '%Y-%m-%d').date() == today]
-        later_tasks = [task for task in tasks if datetime.strptime(task['date'], '%Y-%m-%d').date() > today]
+        # -- Get and Sort Tasks -- #
+        tasks = self.task_manager.get_tasks()
+        sorted_tasks = self.sort_tasks(tasks)
+        today = datetime.now().date()
+
+        # -- Separate Today and Later Tasks -- #
+        today_tasks = [task for task in sorted_tasks if datetime.strptime(task['date'], '%d/%m/%Y').date() == today]
+        later_tasks = [task for task in sorted_tasks if datetime.strptime(task['date'], '%d/%m/%Y').date() > today]
 
         self.create_task_grid(today_frame, today_tasks)
         self.create_task_grid(later_frame, later_tasks)
@@ -79,6 +85,9 @@ class App(tk.Tk):
         # -- Entry Widget -- #
         entry = widgets.Entry(left_frame, color=self.theme['entry'], border_color=self.theme['entry_border'], fg=self.theme['fg'], width=180)
         entry.place(x=10, y=90)
+
+        menubtn = widgets.MenuButton(top_frame, text='Sorted by', width=125, options=["Priority", "Date", ""])
+        menubtn.place(x=865, y=10)
 
     # -- Task Grid Creation -- #
     def create_task_grid(self, parent_frame, tasks):
@@ -96,6 +105,15 @@ class App(tk.Tk):
                                 bg=self.theme['main_frame'],
                                 width=800//tasks_per_row-9*tasks_per_row)
             w.pack(side='left', padx=10, pady=10)
+
+    def sort_tasks(self, tasks):
+        # -- Task Sorting Function -- #
+        def task_sort_key(task):
+            date = datetime.strptime(task['date'], '%d/%m/%Y')
+            priority_order = {'High': 0, 'Medium': 1, 'Low': 2}
+            return (date, priority_order.get(task['priority'], 3))
+
+        return sorted(tasks, key=task_sort_key)
 
     # -- Add Task Window -- #
     def add_task_window(self):

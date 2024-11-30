@@ -1,6 +1,7 @@
 # -- Imports -- #
 import tkinter as tk
-from typing import Tuple, Optional, Callable
+from typing import Tuple, Optional, Callable, List
+import math
 
 # -- Utility Functions -- #
 def create_rounded_rectangle(canvas: tk.Canvas, x1: int, y1: int, x2: int, y2: int, radius: int, **kwargs) -> int:
@@ -46,7 +47,7 @@ class TaskWidget():
         
         self.c.create_text(15, 15, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), width=self.width-15*2, anchor='nw')
         self.c.create_text(10, self.height-10, text=self.date, fill=self.fg, font=self.font, anchor='sw')
-        self.c.create_text(80, self.height-10, text=f' | {self.hour}h', fill=self.fg, font=self.font, anchor='sw')
+        self.c.create_text(80, self.height-10, text=self.hour, fill=self.fg, font=self.font, anchor='sw')
         self.c.create_text(self.width-10, self.height-10, text=self.priority, fill=self.fg, font=('San Francisco', 10, 'bold'), anchor='se')
     
     # -- Utility Methods -- #
@@ -204,3 +205,200 @@ class Entry():
 
     def grid(self, **kwargs):
         self.c.grid(**kwargs)
+
+# -- MenuButton Class -- #
+class MenuButton:
+    def __init__(self, parent, text: str = 'Button', options: List[str] = [], 
+                 font: Tuple[str, int] = ('San Francisco', 10),
+                 width: int = 100, height: int = 30, r: int = 30, 
+                 color: str = '#3C3C3C', hover_color: str = '#4C4C4C', 
+                 fg: str = '#FFFFFF', bg: str = '', 
+                 command: Optional[Callable] = None):
+        
+        # -- Initialization -- #
+        self.parent = parent
+        self.width = width
+        self.height = height
+        self.text = text
+        self.options = options
+        self.font = font
+        self.r = r
+        self.color = color
+        self.hover_color = hover_color
+        self.bg = bg or self._get_parent_bg()
+        self.fg = fg
+        self.command = command
+        self.is_open = False
+        self.selected_option = None
+
+        # -- Canvas Creation -- #
+        self.c = tk.Canvas(self.parent, width=self.width, height=self.height, 
+                           bg=self.bg, highlightthickness=0)
+
+        # -- Drawing Elements -- #
+        create_rounded_rectangle(self.c, 0, 0, self.width, self.height, 
+                                 radius=self.r, fill=self.color, tags='btn_rect')
+        self.c.create_text(10, self.height//2, text=self.text, fill=self.fg, 
+                           anchor='w', tags='btn_text', font=self.font)
+        self._draw_triangle()
+        self.c.create_rectangle(0, 0, self.width, self.height, 
+                                fill='', outline='', tags='hitbox')
+
+        # -- Event Bindings -- #
+        self.c.tag_bind('hitbox', '<Enter>', lambda e: self._btn_hover('enter'))
+        self.c.tag_bind('hitbox', '<Leave>', lambda e: self._btn_hover('leave'))
+        self.c.tag_bind('hitbox', '<Button-1>', lambda e: self._btn_click())
+
+        self.dropdown = None
+
+    # -- Triangle Drawing -- #
+    def _draw_triangle(self):
+
+        triangle_width = min(self.height // 2, self.width // 8)
+        triangle_height = triangle_width // 2
+
+        x_center = self.width - 20
+        y_center = self.height // 2
+
+        x1 = x_center - triangle_width / 2
+        x2 = x_center + triangle_width / 2
+        x3 = x_center
+
+        y1 = y_center - triangle_height / 2
+        y2 = y_center - triangle_height / 2
+        y3 = y_center + triangle_height / 2
+
+        self.c.create_polygon(x1, y1, x2, y2, x3, y3, 
+                            fill=self.fg, outline=self.fg, tags='down_arrow')
+
+    # -- Event Handlers -- #
+    def _btn_click(self):
+        if self.is_open:
+            self.close_dropdown()
+        else:
+            self.open_dropdown()
+
+    def _btn_hover(self, state: str):
+        fill_color = self.hover_color if state == 'enter' else self.color
+        self.c.itemconfig('btn_rect', fill=fill_color)
+
+    def _option_selected(self, option: str):
+        self.selected_option = option
+        if self.dropdown:
+            self.dropdown.update_selected() 
+        if self.command:
+            self.command(option)
+        self.close_dropdown()
+
+    # -- Dropdown Management -- #
+    def open_dropdown(self):
+        if self.dropdown is None or not self.dropdown.winfo_exists():
+            x = self.parent.winfo_rootx() + self.c.winfo_x()
+            y = self.parent.winfo_rooty() + self.c.winfo_y() + self.height
+            self.dropdown = DropdownWindow(self.parent, self.options, self.width, 
+                                           self.font, self.color, self.hover_color, 
+                                           self.fg, self._option_selected, 
+                                           selected_option=self.selected_option)
+            dropdown_height = len(self.options) * 30 + 4
+            self.dropdown.geometry(f"{self.width}x{dropdown_height}+{x}+{y}")
+        else:
+            self.dropdown.selected_option = self.selected_option
+            self.dropdown.update_selected()
+        self.dropdown.deiconify()
+        self.is_open = True
+
+    def close_dropdown(self):
+        if self.dropdown and self.dropdown.winfo_exists():
+            self.dropdown.withdraw()
+        self.is_open = False
+
+    # -- Utility Methods -- #
+    def _get_parent_bg(self) -> str:
+        window_color = self.parent.cget('bg')
+        rgb_values = self.parent.winfo_rgb(window_color)
+        return '#{:02x}{:02x}{:02x}'.format(rgb_values[0] // 256, 
+                                            rgb_values[1] // 256, 
+                                            rgb_values[2] // 256)
+
+    # -- Layout Methods -- #
+    def pack(self, **kwargs):
+        self.c.pack(**kwargs)
+    
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+
+    def grid(self, **kwargs):
+        self.c.grid(**kwargs)
+
+# -- DropdownWindow Class -- #
+class DropdownWindow(tk.Toplevel):
+    def __init__(self, parent, options: List[str], width: int, 
+                 font: Tuple[str, int], color: str, hover_color: str, 
+                 fg: str, command: Callable, selected_option: Optional[str] = None):
+        super().__init__(parent)
+        self.overrideredirect(True)
+        self.attributes('-topmost', True)
+
+        self.width = width
+        self.height = len(options) * 30 + 4
+        self.color = color
+        self.hover_color = hover_color
+        self.fg = fg
+        self.font = font
+        self.command = command
+        self.selected_option = selected_option
+        self.options = options
+        self.buttons = []
+
+        self.canvas = tk.Canvas(self, width=self.width, height=self.height, 
+                                bg=parent.cget('bg'), highlightthickness=0)
+        self.canvas.pack(fill='both', expand=True)
+
+        create_rounded_rectangle(self.canvas, 2, 2, self.width-2, self.height-2, 
+                                 radius=10, fill=self.color, outline='')
+
+        self.create_buttons()
+
+        self.bind('<FocusOut>', self._on_focus_out)
+
+    def create_buttons(self):
+        for i, option in enumerate(self.options):
+            y = i * 30 + 2
+            button = tk.Button(self.canvas, text=option, font=self.font, 
+                               bg=self.color, fg=self.fg,
+                               activebackground=self.hover_color, 
+                               activeforeground=self.fg,
+                               relief=tk.FLAT, anchor='w',
+                               command=lambda o=option: self._on_select(o))
+            button.configure(width=self.width-4)
+            
+            self.canvas.create_window(self.width//2, y+15, window=button, width=self.width-4)
+            
+            button.bind("<Enter>", lambda e, b=button: self._on_enter(b))
+            button.bind("<Leave>", lambda e, b=button: self._on_leave(b))
+            
+            self.buttons.append(button)
+        
+        self.update_selected()
+
+    def update_selected(self):
+        for button in self.buttons:
+            if button['text'] == self.selected_option:
+                button.configure(text="✓ " + button['text'])
+            elif button['text'].startswith("✓ "):
+                button.configure(text=button['text'][2:])
+
+    def _on_select(self, option):
+        self.selected_option = option
+        self.update_selected()
+        self.command(option)
+        self.withdraw()
+
+    def _on_enter(self, button):
+        button.config(bg=self.hover_color)
+
+    def _on_leave(self, button):
+        button.config(bg=self.color)
+
+    def _on_focus_out(self, event):
+        self.withdraw()
