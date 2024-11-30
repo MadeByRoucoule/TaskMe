@@ -37,6 +37,9 @@ class MainPage:
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
+        bigbtn = widgets.Button(self.left_frame, radius=50, width=190, height=100)
+        bigbtn.place(x=10, y=10)
+
         self.update_tasks_widgets()
 
     def update_tasks_widgets(self):
@@ -50,7 +53,7 @@ class MainPage:
         x = 10
         tasks_per_row = 3
         for task in tasks['tasks']:
-            self.w = widgets.TaskWidget(self.main_frame, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250, tag=task['text'], command=lambda t=task['text']: self.open_task_window(t))
+            self.w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250, tag=task['text'], command=lambda t=task['text']: self.open_task_window(t))
             self.w.place(x=x, y=y)
             tasks_per_row -= 1
             if tasks_per_row == 0:
@@ -65,6 +68,7 @@ class MainPage:
 
         width, height = 250, 250
         posx, posy = ( self.parent.winfo_x() + self.parent.winfo_width()//2 ) - width // 2, ( self.parent.winfo_y() + self.parent.winfo_height()//2 ) - height // 2
+        priority = ['High', 'Medium', 'Low']
 
         self.add_task_win = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
         self.add_task_win.title('Add·Task')
@@ -80,10 +84,12 @@ class MainPage:
         self.date_entry = widgets.Entry(self.add_task_win, placeholder_text='Date (d/m/y)', width=200)
         self.date_entry.pack(pady=5)
         self.hour_entry = widgets.Entry(self.add_task_win, placeholder_text='Hour (ex: 12h00)', width=200)
-        self.hour_entry.pack(pady=(5,10))
+        self.hour_entry.pack(pady=5)
+        self.priority_btn = widgets.MenuButton(self.add_task_win, width=200)
+        self.priority_btn.pack(pady=5)
 
         self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], width=200,command=lambda: self.add_task_win.destroy())
-        self.cancel_btn.pack(side='bottom', pady=(5,10))
+        self.cancel_btn.pack(side='bottom', pady=5)
         self.done_btn = widgets.Button(self.add_task_win, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=200,command=self.add_task_done)
         self.done_btn.pack(side='bottom', pady=(10,5))
 
