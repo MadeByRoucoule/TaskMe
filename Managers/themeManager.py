@@ -24,14 +24,12 @@ class ThemeManager:
                 themes_file = json.load(t)
             if themes_file['name'] == theme_name:
                 with open('json/settings.json', 'r') as f:
-                    settings = json.load(f)
-                settings['current_theme'] = path
+                    self.settings = json.load(f)
+                self.settings['current_theme'] = path
                 with open('json/settings.json', 'w') as f:
-                    json.dump(settings, f)
+                    json.dump(self.settings, f)
 
     def get_current_theme(self):
-        with open('json/settings.json', 'r') as f:
-                    settings = json.load(f)
-        with open(settings['current_theme'], 'r') as f:
+        with open(self.settings['current_theme'], 'r') as f:
             theme = json.load(f)
             return theme['colors']

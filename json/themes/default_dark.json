@@ -10,9 +10,13 @@
         "left_frame": "#222222",
         "main_frame": "#1B1B1B",
         "fg":"#FFFFFF",
+        "colored_button":"#2B593F",
+        "hover_colored_button":"#23312A",
         "button":"#3C3C3C",
         "hover_button":"#4C4C4C",
         "entry":"#4C4C4C",
-        "entry_border":"#343434"
+        "entry_border":"#343434",
+        "priority_colors":["#6E3630", "#89632A", "#2B593F"],
+        "hover_priority_colors":["#3E2825", "#403324", "#23312A"]
     }
 }
