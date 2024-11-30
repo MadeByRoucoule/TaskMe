@@ -124,7 +124,7 @@ class TaskWidget:
         
         self.c.create_text(15, 15, text=self.text, fill=self.fg, font=('San Francisco', 12, 'bold'), width=self.width-15*2, anchor='nw')
         self.c.create_text(10, self.height-10, text=self.date, fill=self.fg, font=self.font, anchor='sw')
-        self.c.create_text(85, self.height-10, text=self.hour, fill=self.fg, font=self.font, anchor='sw')
+        self.c.create_text(85, self.height-10, text=f'| {self.hour}', fill=self.fg, font=self.font, anchor='sw')
         self.c.create_text(self.width-10, self.height-10, text=self.priority, fill=self.fg, font=('San Francisco', 10, 'bold'), anchor='se')
         self.c.create_rectangle(0, 0, self.width, self.height, fill='', outline='', tags='hitbox')
 
