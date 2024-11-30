@@ -19,3 +19,17 @@ class TasksManager:
                 infos.append(task['hour'])
                 infos.append(task['priority'])
                 return infos
+            
+    def add_task(self, text, date, hour, priority):
+        with open(self.tasks_file_path, 'r+', encoding='utf-8') as f:
+            tasks = json.load(f)
+            new_task = {
+                'text':text,
+                'date':date,
+                'hour':hour,
+                'priority':priority
+            }
+            tasks['tasks'].append(new_task)
+            f.seek(0)
+            json.dump(tasks, f, indent=4)
+            

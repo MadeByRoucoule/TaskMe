@@ -1,46 +1,10 @@
 {
     "tasks": [
         {
-            "text": "Réunion projet développement",
-            "date": "30/11/2024",
-            "hour": "15h00",
-            "priority": "High"
-        },
-        {
-            "text": "Préparation présentation marketing",
-            "date": "30/11/2024", 
-            "hour": "14h00",
-            "priority": "Medium"
-        },
-        {
-            "text": "Rendez-vous médecin",
-            "date": "05/12/2024",
-            "hour": "09h00",
-            "priority": "High"
-        },
-        {
-            "text": "Achat cadeau anniversaire maman",
-            "date": "20/12/2024",
-            "hour": "16h00",
+            "text": "dzqdqzdqzd",
+            "date": "qzdqzdqzd",
+            "hour": "qzdqzdqzd",
             "priority": "Low"
-        },
-        {
-            "text": "Révision code projet TaskMe",
-            "date": "01/12/2024",
-            "hour": "20h00",
-            "priority": "High"
-        },
-        {
-            "text": "Cours de langue en ligne",
-            "date": "10/12/2024",
-            "hour": "18h00",
-            "priority": "Medium"
-        },
-        {
-            "text": "Préparation rapport financier",
-            "date": "28/11/2024",
-            "hour": "11h00",
-            "priority": "High"
         }
     ]
 }

@@ -174,12 +174,18 @@ class TaskWidget:
     # -- Layout Methods -- #
     def pack(self, **kwargs):
         self.c.pack(**kwargs)
-    
+    def pack_forget(self, **kwargs):
+        self.c.pack_forget(**kwargs)
+
     def place(self, **kwargs):
         self.c.place(**kwargs)
+    def place_forget(self, **kwargs):
+        self.c.place_forget(**kwargs)
 
     def grid(self, **kwargs):
         self.c.grid(**kwargs)
+    def grid_forget(self, **kwargs):
+        self.c.grid_forget(**kwargs)
 
 class Entry:
     def __init__(self, parent, font:Tuple[str, int] = ('San Francisco', 10), placeholder_text:str = 'Entry', 

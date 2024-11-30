@@ -13,8 +13,6 @@ class MainPage:
 
         self.frames()
         self.widgets()
-        
-        # tm.get_tasks_infos()
 
     def frames(self):
 
@@ -39,9 +37,15 @@ class MainPage:
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
+        self.update_tasks_widgets()
+
+    def update_tasks_widgets(self):
+        try:
+            self.w.place_forget()
+        except:
+            None
         task_manager = TasksManager()
         tasks = task_manager.load_tasks()
-
         y = 10
         x = 10
         tasks_per_row = 3
@@ -85,14 +89,14 @@ class MainPage:
 
     def add_task_done(self):
 
-        print(self.name_entry.get())
-        print(self.date_entry.get())
-        print(self.hour_entry.get())
-
+        task_manager = TasksManager()
+        task_manager.add_task(self.name_entry.get(), self.date_entry.get(), self.hour_entry.get(), 'Low')
+        self.update_tasks_widgets()
         self.add_task_win.destroy()
 
     # -- TASK WINDOW -- #
     def open_task_window(self, tag):
+
         task_manager = TasksManager()
         width, height = 400, 500
         posx, posy = (self.parent.winfo_x() + self.parent.winfo_width()//2) - width // 2, (self.parent.winfo_y() + self.parent.winfo_height()//2) - height // 2
