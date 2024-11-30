@@ -46,8 +46,8 @@ class MainPage:
         x = 10
         tasks_per_row = 3
         for task in tasks['tasks']:
-            w = widgets.TaskWidget(self.main_frame, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250)
-            w.place(x=x, y=y)
+            self.w = widgets.TaskWidget(self.main_frame, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250, tag=task['text'], command=lambda t=task['text']: self.open_task_window(t))
+            self.w.place(x=x, y=y)
             tasks_per_row -= 1
             if tasks_per_row == 0:
                 y = y + 100 + 10
@@ -56,6 +56,7 @@ class MainPage:
             else:
                 x = x + 250 + 10
 
+    # -- ADD TASK WINDOW -- #
     def add_task(self):
 
         width, height = 250, 250
@@ -89,3 +90,29 @@ class MainPage:
         print(self.hour_entry.get())
 
         self.add_task_win.destroy()
+
+    # -- TASK WINDOW -- #
+    def open_task_window(self, tag):
+        task_manager = TasksManager()
+        width, height = 400, 500
+        posx, posy = (self.parent.winfo_x() + self.parent.winfo_width()//2) - width // 2, (self.parent.winfo_y() + self.parent.winfo_height()//2) - height // 2
+        infos = task_manager.get_task_info(tag)
+
+        self.task_win = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
+        self.task_win.title('Task Details')
+        self.task_win.geometry(f'{width}x{height}+{posx}+{posy}')
+        self.task_win.resizable(False, False)
+
+        if platform.system() == 'Windows':
+            all_stuffs.hide(self.task_win)
+            title_bar_color.set(self.task_win, self.theme['title_bar'])
+
+        self.task_win.bind("<FocusOut>", lambda e: self.close_task_window())
+
+        tk.Label(self.task_win, text=infos[0], font=('San Francisco', 16, 'bold'), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=10)
+        tk.Label(self.task_win, text=f"Date: {infos[1]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        tk.Label(self.task_win, text=f"Heure: {infos[2]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        tk.Label(self.task_win, text=f"Priorité: {infos[3]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+
+    def close_task_window(self):
+        self.task_win.destroy()

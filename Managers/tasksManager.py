@@ -9,7 +9,13 @@ class TasksManager:
             tasks = json.load(f)
         return tasks
 
-    def get_tasks_infos(self):
-        self.load_tasks()
-        for task in self.tasks['tasks']:
-            print(task['text'])
+    def get_task_info(self, text):
+        infos = []
+        tasks = self.load_tasks()
+        for task in tasks['tasks']:
+            if task['text'] == text:
+                infos.append(task['text'])
+                infos.append(task['date'])
+                infos.append(task['hour'])
+                infos.append(task['priority'])
+                return infos

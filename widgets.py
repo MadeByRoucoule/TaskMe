@@ -82,7 +82,8 @@ class TaskWidget:
     def __init__(self, parent, text:str, date:str, hour:str, priority:str, completed:bool,
                  width:int = 200, height:int = 100, radius:int = 15, font:Tuple = ('San Francisco', 10), 
                  color:str = '', fg:str = '#FFFFFF', bg:str = '', 
-                 priority_colors:list = ['#6E3630', '#89632A', '#2B593F'], hover_priority_colors:list = ['#3E2825', '#403324', '#23312A']):
+                 priority_colors:list = ['#6E3630', '#89632A', '#2B593F'], hover_priority_colors:list = ['#3E2825', '#403324', '#23312A'],
+                 tag:str = '', command: Optional[Callable] = None):
         
         # -- Initialization -- #
         self.parent = parent
@@ -102,6 +103,8 @@ class TaskWidget:
         self.bg = bg or self._get_parent_bg()
         self.priority_color = priority_colors
         self.hover_priority_color = hover_priority_colors
+        self.tag = tag
+        self.command = command
 
         # -- Canvas Creation -- #
         self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
@@ -130,8 +133,8 @@ class TaskWidget:
     def _binds(self):
         self.c.tag_bind('hitbox', '<Enter>', lambda e: self._w_hover('enter'))
         self.c.tag_bind('hitbox', '<Leave>', lambda e: self._w_hover('leave'))
-        # self.c.tag_bind('hitbox', '<Button-1>', lambda e: self._w_click('click'))
-        # self.c.tag_bind('hitbox', '<ButtonRelease-1>', lambda e: self._w_click('release'))
+        self.c.tag_bind('hitbox', '<Button-1>', lambda e: self._w_click('click'))
+        self.c.tag_bind('hitbox', '<ButtonRelease-1>', lambda e: self._w_click('release'))
 
     # -- Event Handlers -- #
     def _w_hover(self, state: str):        
@@ -154,6 +157,13 @@ class TaskWidget:
             else :
                 fill_color = self.color
         self.c.itemconfig('w_rect', fill=fill_color)
+
+    def _w_click(self, state):
+        if state == 'release' and self.command:
+            self.command(self.tag)
+
+    def get_tag(self):
+        return self.tag
 
     # -- Utility Methods -- #
     def _get_parent_bg(self):
