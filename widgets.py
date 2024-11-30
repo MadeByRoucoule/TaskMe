@@ -84,8 +84,6 @@ class TaskWidget:
                  color:str = '', fg:str = '#FFFFFF', bg:str = '', 
                  priority_colors:list = ['#6E3630', '#89632A', '#2B593F'], hover_priority_colors:list = ['#3E2825', '#403324', '#23312A']):
         
-        #priority_colors:list = ['#3E2825', '#403324', '#23312A'], hover_priority_colors:list = ['#2D1D1B', '#30261B', '#17211C']
-
         # -- Initialization -- #
         self.parent = parent
         self.text = text
@@ -156,6 +154,62 @@ class TaskWidget:
             else :
                 fill_color = self.color
         self.c.itemconfig('w_rect', fill=fill_color)
+
+    # -- Utility Methods -- #
+    def _get_parent_bg(self):
+        window_color = self.parent.cget('bg')
+        rgb_values = self.parent.winfo_rgb(window_color)
+        return '#{:02x}{:02x}{:02x}'.format(rgb_values[0] // 256, rgb_values[1] // 256, rgb_values[2] // 256)
+
+    # -- Layout Methods -- #
+    def pack(self, **kwargs):
+        self.c.pack(**kwargs)
+    
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+
+    def grid(self, **kwargs):
+        self.c.grid(**kwargs)
+
+class Entry:
+    def __init__(self, parent, font:Tuple[str, int] = ('San Francisco', 10), placeholder_text:str = 'Entry', 
+                 width:int = 100, height:int = 30, radius:int = 15, border_width: int = 2,
+                 color: str = '#4C4C4C', fg: str = '#FFFFFF',placeholder_color:str = '#888888',
+                 bg: str = '', border_color: str = '#343434'):
+        
+        # -- Initialization -- #
+        self.parent = parent
+        self.font = font
+        self.font_list = tuple(font)
+        self.placeholder_text = placeholder_text
+        self.width = width
+        self.height = height
+        self.r = radius
+        self.border_width = border_width
+        self.color = color
+        self.fg = fg
+        self.placeholder_color = placeholder_color
+        self.bg = bg or self._get_parent_bg()
+        self.border_color = border_color
+
+        # -- Canvas Creation -- #
+        self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
+
+        self._draw()
+
+    # -- Drawing Elements -- #
+    def _draw(self):
+        # -- Entry Widget Creation -- #
+        self.e = tk.Entry(self.parent, relief=tk.FLAT, highlightthickness=0, bg=self.color, font=self.font, fg=self.fg, width=self.width//self.font_list[1])
+        self.e.insert(0, self.placeholder_text)
+        # self.e.bind("<FocusIn>", self._on_entry_click)
+        # self.e.bind("<FocusOut>", self._on_focusout)
+        self.e.config(fg=self.placeholder_color)
+        self.c.create_window(self.width // 2, self.height // 2, window=self.e, anchor='center', tags='entry_window')
+
+        create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.border_color, tags='border_rect')
+        create_rounded_rectangle(self.c, self.border_width, self.border_width, self.width-self.border_width, self.height-self.border_width, radius=self.r-self.border_width, fill=self.color, tags='entry_rect')
+        self.c.create_rectangle(0, 0, self.width, self.height, fill='', outline='', tags='hitbox')
 
     # -- Utility Methods -- #
     def _get_parent_bg(self):

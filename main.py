@@ -9,10 +9,10 @@ from Managers.themeManager import ThemeManager
 class App(tk.Tk):
     def __init__(self, *arg, **kwargs):
         tk.Tk.__init__(self, *arg, **kwargs)
-        self.title('TaskMe')
+        self.title('Task·Me')
         self.geometry("1000x600")
         self.resizable(False, False)
-        
+
         self.theme_manager = ThemeManager()
         self.theme_manager.change_theme('Default Dark')
         self.apply_theme()

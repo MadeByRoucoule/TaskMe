@@ -69,3 +69,6 @@ class MainPage:
         if platform.system() == 'Windows':
             all_stuffs.hide(top_level)
             title_bar_color.set(top_level, self.theme['title_bar'])
+
+        name_entry = widgets.Entry(top_level)
+        name_entry.pack()
