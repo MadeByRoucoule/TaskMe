@@ -70,5 +70,5 @@ class MainPage:
             all_stuffs.hide(top_level)
             title_bar_color.set(top_level, self.theme['title_bar'])
 
-        name_entry = widgets.Entry(top_level)
+        name_entry = widgets.Entry(top_level, width=200)
         name_entry.pack()
