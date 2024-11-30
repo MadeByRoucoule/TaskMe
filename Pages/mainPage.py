@@ -61,14 +61,29 @@ class MainPage:
         width, height = 250, 250
         posx, posy = ( self.parent.winfo_x() + self.parent.winfo_width()//2 ) - width // 2, ( self.parent.winfo_y() + self.parent.winfo_height()//2 ) - height // 2
 
-        top_level = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
-        top_level.title('Add·Task')
-        top_level.geometry(f'{width}x{height}+{posx}+{posy}')
-        top_level.resizable(False, False)
+        self.add_task_win = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
+        self.add_task_win.title('Add·Task')
+        self.add_task_win.geometry(f'{width}x{height}+{posx}+{posy}')
+        self.add_task_win.resizable(False, False)
 
         if platform.system() == 'Windows':
-            all_stuffs.hide(top_level)
-            title_bar_color.set(top_level, self.theme['title_bar'])
+            all_stuffs.hide(self.add_task_win)
+            title_bar_color.set(self.add_task_win, self.theme['title_bar'])
 
-        name_entry = widgets.Entry(top_level, width=200)
-        name_entry.pack()
+        self.name_entry = widgets.Entry(self.add_task_win, placeholder_text='Name', width=200)
+        self.name_entry.pack(pady=(10,5))
+        self.date_entry = widgets.Entry(self.add_task_win, placeholder_text='Date (d/m/y)', width=200)
+        self.date_entry.pack(pady=5)
+        self.hour_entry = widgets.Entry(self.add_task_win, placeholder_text='Hour (ex: 12h00)', width=200)
+        self.hour_entry.pack(pady=(5,10))
+
+        self.done_btn = widgets.Button(self.add_task_win, text='Done', width=200,command=self.add_task_done)
+        self.done_btn.pack(side='bottom', pady=10)
+
+    def add_task_done(self):
+
+        print(self.name_entry.get())
+        print(self.date_entry.get())
+        print(self.hour_entry.get())
+
+        self.add_task_win.destroy()
