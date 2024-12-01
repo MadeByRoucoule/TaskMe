@@ -54,7 +54,7 @@ class MainPage:
         try:
             self.w.place_forget()
         except:
-            None
+            pass
         task_manager = TasksManager()
         tasks = task_manager.load_tasks()
         y = 10
@@ -70,6 +70,9 @@ class MainPage:
                 tasks_per_row = 3
             else:
                 x = x + 250 + 10
+
+    def open_task_window(self, tag):
+        taskWindow = TaskWindow(self.parent, self.theme, tag)
 
     # -- ADD TASK WINDOW -- #
     def add_task(self):
@@ -111,20 +114,19 @@ class MainPage:
         else :
             print('Error : please enter informations')
 
-    # -- TASK WINDOW -- #
-    def open_task_window(self, tag):
-
-        task_manager = TasksManager()
-        width, height = 400, 500
-        posx, posy = (self.parent.winfo_x() + self.parent.winfo_width()//2) - width // 2, (self.parent.winfo_y() + self.parent.winfo_height()//2) - height // 2
-        infos = task_manager.get_task_info(tag)
+class TaskWindow():
+    def __init__(self, parent, theme, tag):
+        self.parent = parent
+        self.theme = theme
+        self.task_manager = TasksManager()
+        self.width, self.height = 400, 500
+        self.posx, self.posy = (self.parent.winfo_x() + self.parent.winfo_width()//2) - self.width // 2, (self.parent.winfo_y() + self.parent.winfo_height()//2) - self.height // 2
+        self.infos = self.task_manager.get_task_info(tag)
 
         self.task_win = tk.Toplevel(self.parent, bg=self.theme['top_frame'])
         self.task_win.title('Task Details')
-        self.task_win.geometry(f'{width}x{height}+{posx}+{posy}')
+        self.task_win.geometry(f'{self.width}x{self.height}+{self.posx}+{self.posy}')
         self.task_win.resizable(False, False)
-
-        self.update_tasks_widgets()
 
         if platform.system() == 'Windows':
             all_stuffs.hide(self.task_win)
@@ -132,10 +134,18 @@ class MainPage:
 
         self.task_win.bind("<FocusOut>", lambda e: self.close_task_window())
 
-        tk.Label(self.task_win, text=infos[0], font=('San Francisco', 16, 'bold'), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=10)
-        tk.Label(self.task_win, text=f"Date: {infos[1]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
-        tk.Label(self.task_win, text=f"Heure: {infos[2]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
-        tk.Label(self.task_win, text=f"Priorité: {infos[3]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        bottom_frame = tk.Frame(self.task_win, bg=self.theme['top_frame'])
+        bottom_frame.pack(side='bottom', fill='x')
+
+        tk.Label(self.task_win, text=self.infos[0], font=('San Francisco', 16, 'bold'), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=10)
+        tk.Label(self.task_win, text=f"Date: {self.infos[1]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        tk.Label(self.task_win, text=f"Heure: {self.infos[2]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        tk.Label(self.task_win, text=f"Priorité: {self.infos[3]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+
+        delete_btn = widgets.Button(bottom_frame, text='Delete', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], active_color=self.theme['active_red_button'], width=150)
+        delete_btn.pack(side='left', padx=5, pady=5)
+        done_btn = widgets.Button(bottom_frame, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=150)
+        done_btn.pack(side='right', padx=5, pady=5)
 
     def close_task_window(self):
         self.task_win.destroy()
