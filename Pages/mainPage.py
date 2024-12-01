@@ -37,8 +37,8 @@ class MainPage:
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
-        bigbtn = widgets.Button(self.left_frame, radius=50, width=190, height=100)
-        bigbtn.place(x=10, y=10)
+        priority_btn = widgets.MenuButton(self.left_frame, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=190)
+        priority_btn.place(x=10, y=10)
 
         self.update_tasks_widgets()
 
@@ -79,19 +79,19 @@ class MainPage:
             all_stuffs.hide(self.add_task_win)
             title_bar_color.set(self.add_task_win, self.theme['title_bar'])
 
-        self.name_entry = widgets.Entry(self.add_task_win, placeholder_text='Name', width=200)
+        self.name_entry = widgets.Entry(self.add_task_win, color=self.theme["entry"], border_color=self.theme['entry_border'], placeholder_text='Name', width=200)
         self.name_entry.pack(pady=(10,5))
-        self.date_entry = widgets.Entry(self.add_task_win, placeholder_text='Date (d/m/y)', width=200)
+        self.date_entry = widgets.Entry(self.add_task_win, color=self.theme["entry"], border_color=self.theme['entry_border'], placeholder_text='Date (d/m/y)', width=200)
         self.date_entry.pack(pady=5)
-        self.hour_entry = widgets.Entry(self.add_task_win, placeholder_text='Hour (ex: 12h00)', width=200)
+        self.hour_entry = widgets.Entry(self.add_task_win, color=self.theme["entry"], border_color=self.theme['entry_border'], placeholder_text='Hour (ex: 12h00)', width=200)
         self.hour_entry.pack(pady=5)
-        self.priority_btn = widgets.MenuButton(self.add_task_win, width=200)
+        self.priority_btn = widgets.MenuButton(self.add_task_win, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=200)
         self.priority_btn.pack(pady=5)
 
         self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], width=200,command=lambda: self.add_task_win.destroy())
-        self.cancel_btn.pack(side='bottom', pady=5)
+        self.cancel_btn.pack(side='bottom', pady=(5,10))
         self.done_btn = widgets.Button(self.add_task_win, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=200,command=self.add_task_done)
-        self.done_btn.pack(side='bottom', pady=(10,5))
+        self.done_btn.pack(side='bottom', pady=5)
 
     def add_task_done(self):
 

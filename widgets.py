@@ -10,7 +10,7 @@ def create_rounded_rectangle(canvas: tk.Canvas, x1: int, y1: int, x2: int, y2: i
         x2-radius, y2, x2-radius, y2, x1+radius, y2, x1+radius, y2, x1, y2,
         x1, y2-radius, x1, y2-radius, x1, y1+radius, x1, y1+radius, x1, y1
     ]
-    return canvas.create_polygon(points, **kwargs, outline='black', width=0.5, smooth=True)
+    return canvas.create_polygon(points, **kwargs, smooth=True)
 
 class Button:
     def __init__(self, parent, text:str = 'Button', font: Tuple = ('San Francisco', 10),
@@ -241,7 +241,6 @@ class Entry:
         if self.e.get() == self.placeholder_text:
             self.e.focus()
             self.e.delete(0, "end")
-            self.e.insert(0, '')
             self.e.config(fg=self.fg)
 
     def _on_focusout(self, event):
@@ -299,6 +298,7 @@ class MenuButton:
         self.command = command
         self.is_open = False
         self.selected_option = None
+        self.dropdown_window = None
 
         # -- Canvas Creation -- #
         self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
@@ -309,7 +309,6 @@ class MenuButton:
     def _draw(self):
         create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.color, tags='btn_rect')
         self.c.create_text(10, self.height//2, text=self.text, font=self.font, fill=self.fg, anchor='w', tags='btn_text')
-
         self.c.create_rectangle(0, 0, self.width, self.height, fill='', outline='', tags='hitbox')
 
     # -- Event Bindings -- #
@@ -321,15 +320,63 @@ class MenuButton:
 
     # -- Event Handlers -- #
     def _btn_click(self, state: str):
-        if state == 'release' and self.command:
-            self.command()
+        if state == 'release':
+            if self.is_open:
+                self.close_dropdown()
+            else:
+                self.open_dropdown()
 
     def _btn_hover(self, state: str):        
-        if state == 'enter':
-            fill_color = self.hover_color 
-        else: 
-            fill_color = self.color
+        fill_color = self.hover_color if state == 'enter' else self.color
         self.c.itemconfig('btn_rect', fill=fill_color)
+
+    # -- Dropdown Management -- #
+    def open_dropdown(self):
+        if self.dropdown_window:
+            return
+
+        x, y = self.c.winfo_rootx(), self.c.winfo_rooty() + self.height
+
+        self.dropdown_window = tk.Toplevel(self.parent)
+        self.dropdown_window.geometry(f"{self.width}x{len(self.options)*30}+{x}+{y}")
+        self.dropdown_window.overrideredirect(True)
+        self.dropdown_window.configure(bg=self.color)
+
+        for option in self.options:
+            option_canvas = tk.Canvas(self.dropdown_window, width=self.width, height=30, bg=self.bg, highlightthickness=0)
+            option_canvas.pack(fill=tk.X)
+
+            create_rounded_rectangle(option_canvas, 0, 0, self.width, 30, radius=self.r, fill=self.color, tags='option_rect')
+            option_canvas.create_text(10, 15, text=option, font=self.font, fill=self.fg, anchor='w')
+            option_canvas.create_rectangle(0, 0, self.width, 30, fill='', outline='', tags='hitbox')
+
+            option_canvas.tag_bind('hitbox', '<Enter>', lambda e, canvas=option_canvas: self._option_hover(canvas, 'enter'))
+            option_canvas.tag_bind('hitbox', '<Leave>', lambda e, canvas=option_canvas: self._option_hover(canvas, 'leave'))
+            option_canvas.tag_bind('hitbox', '<Button-1>', lambda e, opt=option: self.select_option(opt))
+
+        self.is_open = True
+        self.dropdown_window.bind("<FocusOut>", self.on_focus_out)
+
+    def close_dropdown(self):
+        if self.dropdown_window:
+            self.dropdown_window.destroy()
+            self.dropdown_window = None
+            self.is_open = False
+
+    def select_option(self, option):
+        self.selected_option = option
+        self.c.itemconfig('btn_text', text=option)
+        self.close_dropdown()
+        if self.command:
+            self.command(option)
+
+    def _option_hover(self, canvas, state):
+        fill_color = self.hover_color if state == 'enter' else self.color
+        canvas.itemconfig('option_rect', fill=fill_color)
+
+    def on_focus_out(self, event):
+        if not self.dropdown_window.focus_get():
+            self.close_dropdown()
 
     # -- Utility Methods -- #
     def _get_parent_bg(self):

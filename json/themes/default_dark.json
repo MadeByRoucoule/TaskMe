@@ -18,6 +18,8 @@
         "hover_button":"#4C4C4C",
         "entry":"#4C4C4C",
         "entry_border":"#343434",
+        "menu_button":"#4A4A4A",
+        "hover_menu_button":"#343434",
         "priority_colors":["#3E2825", "#403324", "#23312A"],
         "hover_priority_colors":["#6E3630", "#89632A", "#2B593F"]
     }
