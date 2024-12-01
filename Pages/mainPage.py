@@ -6,22 +6,29 @@ import widgets
 from Managers.tasksManager import TasksManager
 
 class MainPage:
-    def __init__(self, parent, theme):
+    def __init__(self, parent, theme, page_manager):
         
         self.parent = parent
         self.theme = theme
-
+        self.page_manager = page_manager
+        self.frame = tk.Frame(parent)
         self.frames()
         self.widgets()
+
+    def show(self):
+        self.frame.pack(fill='both', expand=True)
+
+    def hide(self):
+        self.frame.pack_forget()
 
     def frames(self):
 
         # -- Top Section -- #
-        self.top_frame = tk.Frame(self.parent, bg=self.theme['top_frame'], width=1000, height=50)
+        self.top_frame = tk.Frame(self.frame, bg=self.theme['top_frame'], width=1000, height=50)
         self.top_frame.pack(side='top')
 
         # -- Bottom Section -- #
-        self.bottom_frame = tk.Frame(self.parent, width=1000, height=550)
+        self.bottom_frame = tk.Frame(self.frame, width=1000, height=550)
         self.bottom_frame.pack(side='bottom', fill='both', expand=True)
 
         # -- Left Frame -- #
@@ -45,10 +52,10 @@ class MainPage:
         self.update_tasks_widgets()
 
     def home_command(self):
-        print('Home Pressed')
+        self.page_manager.change_page('mainPage')
 
     def settings_command(self):
-        print('Settings Pressed')
+        self.page_manager.change_page('settingsPage')
 
     def update_tasks_widgets(self):
         try:

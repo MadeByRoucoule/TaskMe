@@ -3,7 +3,7 @@ import platform
 if platform.system() == 'Windows':
     from hPyT import *
 # -- Pages -- #
-from Pages.mainPage import MainPage
+from Managers.pagesManager import PageManager
 from Managers.themeManager import ThemeManager
 
 class App(tk.Tk):
@@ -17,7 +17,8 @@ class App(tk.Tk):
         self.theme_manager.change_theme('Default Dark')
         self.apply_theme()
 
-        MainPage(self, self.theme)
+        self.page_manager = PageManager(self, self.theme)
+        self.page_manager        
 
     def apply_theme(self):
 
