@@ -34,13 +34,21 @@ class MainPage:
 
     def widgets(self):
 
-        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
+        btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
-        priority_btn = widgets.MenuButton(self.left_frame, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=190)
-        priority_btn.place(x=10, y=10)
+        home_btn = widgets.Button(self.top_frame, text='Home', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], width=100, font=('San Francisco', 10, 'bold'), command=self.home_command)
+        home_btn.place(x=10, y=10)
+        settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
+        settings_btn.place(x=120, y=10)
 
         self.update_tasks_widgets()
+
+    def home_command(self):
+        print('Home Pressed')
+
+    def settings_command(self):
+        print('Settings Pressed')
 
     def update_tasks_widgets(self):
         try:
@@ -85,20 +93,23 @@ class MainPage:
         self.date_entry.pack(pady=5)
         self.hour_entry = widgets.Entry(self.add_task_win, color=self.theme["entry"], border_color=self.theme['entry_border'], placeholder_text='Hour (ex: 12h00)', width=200)
         self.hour_entry.pack(pady=5)
-        self.priority_btn = widgets.MenuButton(self.add_task_win, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=200)
+        self.priority_btn = widgets.MenuButton(self.add_task_win, options=priority, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=200)
         self.priority_btn.pack(pady=5)
 
-        self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], width=200,command=lambda: self.add_task_win.destroy())
+        self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], active_color=self.theme['active_red_button'], width=200,command=lambda: self.add_task_win.destroy())
         self.cancel_btn.pack(side='bottom', pady=(5,10))
-        self.done_btn = widgets.Button(self.add_task_win, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], width=200,command=self.add_task_done)
+        self.done_btn = widgets.Button(self.add_task_win, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=200,command=self.add_task_done)
         self.done_btn.pack(side='bottom', pady=5)
 
     def add_task_done(self):
 
         task_manager = TasksManager()
-        task_manager.add_task(self.name_entry.get(), self.date_entry.get(), self.hour_entry.get(), 'Low')
-        self.update_tasks_widgets()
-        self.add_task_win.destroy()
+        if self.name_entry.get() != '' and self.date_entry.get() and self.hour_entry.get()!= '' and self.priority_btn.selected_option != None :
+            task_manager.add_task(self.name_entry.get(), self.date_entry.get(), self.hour_entry.get(), self.priority_btn.selected_option)
+            self.update_tasks_widgets()
+            self.add_task_win.destroy()
+        else :
+            print('Error : please enter informations')
 
     # -- TASK WINDOW -- #
     def open_task_window(self, tag):
@@ -112,6 +123,8 @@ class MainPage:
         self.task_win.title('Task Details')
         self.task_win.geometry(f'{width}x{height}+{posx}+{posy}')
         self.task_win.resizable(False, False)
+
+        self.update_tasks_widgets()
 
         if platform.system() == 'Windows':
             all_stuffs.hide(self.task_win)

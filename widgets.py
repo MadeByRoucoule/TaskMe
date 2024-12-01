@@ -13,10 +13,10 @@ def create_rounded_rectangle(canvas: tk.Canvas, x1: int, y1: int, x2: int, y2: i
     return canvas.create_polygon(points, **kwargs, smooth=True)
 
 class Button:
-    def __init__(self, parent, text:str = 'Button', font: Tuple = ('San Francisco', 10),
-                 width: int = 100, height: int = 30, radius: int = 15, 
-                 color: str = '#2B593F', hover_color: str = '#23312A', fg: str = '#FFFFFF', 
-                 bg: str = '', command: Optional[Callable] = None):
+    def __init__(self, parent, text:str = 'Button', font:Tuple = ('San Francisco', 10),
+                 width:int = 100, height: int = 30, radius: int = 15, 
+                 color:str = '#2B593F', hover_color:str = '#23312A', active_color:str = '#1E2A23',
+                 fg:str = '#FFFFFF', bg:str = '', command:Optional[Callable] = None):
         
         # -- Initialization -- #
         self.parent = parent
@@ -27,6 +27,7 @@ class Button:
         self.r = radius
         self.color = color
         self.hover_color = hover_color
+        self.active_color = active_color
         self.fg = fg
         self.bg = bg or self._get_parent_bg()
         self.command = command
@@ -54,6 +55,12 @@ class Button:
     def _btn_click(self, state: str):
         if state == 'release' and self.command:
             self.command()
+            try:
+                self.c.itemconfig('btn_rect', fill=self.hover_color)
+            except:
+                None
+        elif state == 'click' and self.command:
+            self.c.itemconfig('btn_rect', fill=self.active_color)
 
     def _btn_hover(self, state: str):        
         if state == 'enter':
@@ -87,9 +94,9 @@ class Button:
 class TaskWidget:
     def __init__(self, parent, text:str, date:str, hour:str, priority:str, completed:bool,
                  width:int = 200, height:int = 100, radius:int = 15, font:Tuple = ('San Francisco', 10), 
-                 color:str = '', fg:str = '#FFFFFF', bg:str = '', 
-                 priority_colors:list = ['#6E3630', '#89632A', '#2B593F'], hover_priority_colors:list = ['#3E2825', '#403324', '#23312A'],
-                 tag:str = '', command: Optional[Callable] = None):
+                 color:str = '', hover_color:str = '', active_color:str = '', fg:str = '#FFFFFF', bg:str = '', 
+                 priority_colors:list = ['#6E3630', '#89632A', '#2B593F'], hover_priority_colors:list = ['#3E2825', '#403324', '#23312A'], 
+                 active_priority_colors:list = ["#331F1D", "#352A1E", "#1E2A23"], tag:str = '', command: Optional[Callable] = None):
         
         # -- Initialization -- #
         self.parent = parent
@@ -104,11 +111,13 @@ class TaskWidget:
         self.font = font
         self.title_font:Tuple = ('San Francisco', 10, 'bold')
         self.color = color
-        self.hover_color = str
+        self.hover_color = hover_color
+        self.active_color = active_color
         self.fg = fg
         self.bg = bg or self._get_parent_bg()
         self.priority_color = priority_colors
         self.hover_priority_color = hover_priority_colors
+        self.active_priority_colors = active_priority_colors
         self.tag = tag
         self.command = command
 
@@ -167,6 +176,24 @@ class TaskWidget:
     def _w_click(self, state):
         if state == 'release' and self.command:
             self.command(self.tag)
+            if not self.color and self.priority == 'High':
+                fill_color = self.hover_priority_color[0]
+            elif not self.color and self.priority == 'Medium':
+                fill_color = self.hover_priority_color[1]
+            elif not self.color and self.priority == 'Low':
+                fill_color = self.hover_priority_color[2]
+            else:
+                fill_color = self.hover_color
+        elif state == 'click' and self.command:
+            if not self.color and self.priority == 'High':
+                fill_color = self.active_priority_colors[0]
+            elif not self.color and self.priority == 'Medium':
+                fill_color = self.active_priority_colors[1]
+            elif not self.color and self.priority == 'Low':
+                fill_color = self.active_priority_colors[2]
+            else :
+                fill_color = self.active_color
+            self.c.itemconfig('w_rect', fill=fill_color)
 
     def get_tag(self):
         return self.tag
@@ -280,8 +307,8 @@ class Entry:
 class MenuButton:
     def __init__(self, parent, text:str = 'Menu Button', options: Tuple[str] = ('Option 1', 'Option 2', 'Option 3'), font: Tuple = ('San Francisco', 10),
                  width: int = 100, height: int = 30, radius: int = 15, 
-                 color: str = '#4A4A4A', hover_color: str = '#343434', fg: str = '#FFFFFF', 
-                 bg: str = '', command: Optional[Callable] = None):
+                 color: str = '#4A4A4A', hover_color: str = '#343434', active_color:str = '#2A2A2A', 
+                 fg: str = '#FFFFFF', bg: str = '', command: Optional[Callable] = None):
         
         # -- Initialization -- #
         self.parent = parent
@@ -299,6 +326,7 @@ class MenuButton:
         self.is_open = False
         self.selected_option = None
         self.dropdown_window = None
+        self.mouse_on_widget = False
 
         # -- Canvas Creation -- #
         self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
@@ -311,14 +339,12 @@ class MenuButton:
         self.c.create_text(10, self.height//2, text=self.text, font=self.font, fill=self.fg, anchor='w', tags='btn_text')
         self.c.create_rectangle(0, 0, self.width, self.height, fill='', outline='', tags='hitbox')
 
-    # -- Event Bindings -- #
     def _binds(self):
         self.c.tag_bind('hitbox', '<Enter>', lambda e: self._btn_hover('enter'))
         self.c.tag_bind('hitbox', '<Leave>', lambda e: self._btn_hover('leave'))
         self.c.tag_bind('hitbox', '<Button-1>', lambda e: self._btn_click('click'))
         self.c.tag_bind('hitbox', '<ButtonRelease-1>', lambda e: self._btn_click('release'))
 
-    # -- Event Handlers -- #
     def _btn_click(self, state: str):
         if state == 'release':
             if self.is_open:
@@ -330,7 +356,6 @@ class MenuButton:
         fill_color = self.hover_color if state == 'enter' else self.color
         self.c.itemconfig('btn_rect', fill=fill_color)
 
-    # -- Dropdown Management -- #
     def open_dropdown(self):
         if self.dropdown_window:
             return
@@ -355,13 +380,26 @@ class MenuButton:
             option_canvas.tag_bind('hitbox', '<Button-1>', lambda e, opt=option: self.select_option(opt))
 
         self.is_open = True
-        self.dropdown_window.bind("<FocusOut>", self.on_focus_out)
+        self.dropdown_window.bind("<Enter>", self.on_enter)
+        self.dropdown_window.bind("<Leave>", self.on_leave)
+        self.dropdown_window.bind("<FocusOut>", self.check_focus)
 
     def close_dropdown(self):
         if self.dropdown_window:
             self.dropdown_window.destroy()
             self.dropdown_window = None
             self.is_open = False
+
+    def on_enter(self, event):
+        self.mouse_on_widget = True
+
+    def on_leave(self, event):
+        self.mouse_on_widget = False
+        self.dropdown_window.after(100, self.check_focus)
+
+    def check_focus(self, event=None):
+        if not self.mouse_on_widget and self.dropdown_window:
+            self.close_dropdown()
 
     def select_option(self, option):
         self.selected_option = option
@@ -374,11 +412,6 @@ class MenuButton:
         fill_color = self.hover_color if state == 'enter' else self.color
         canvas.itemconfig('option_rect', fill=fill_color)
 
-    def on_focus_out(self, event):
-        if not self.dropdown_window.focus_get():
-            self.close_dropdown()
-
-    # -- Utility Methods -- #
     def _get_parent_bg(self):
         window_color = self.parent.cget('bg')
         rgb_values = self.parent.winfo_rgb(window_color)

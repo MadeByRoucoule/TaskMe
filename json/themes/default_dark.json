@@ -1,5 +1,4 @@
 {
-
     "name":"Default Dark",
     "version": "0.0.1",
 
@@ -12,15 +11,20 @@
         "fg":"#FFFFFF",
         "green_button":"#2B593F",
         "hover_green_button":"#23312A",
+        "active_green_button":"#141C17",
         "red_button":"#562A2A",
         "hover_red_button":"#302222",
+        "active_red_button":"#1C1313",
         "button":"#3C3C3C",
         "hover_button":"#4C4C4C",
+        "active_button":"#2E2E2E",
         "entry":"#4C4C4C",
         "entry_border":"#343434",
         "menu_button":"#4A4A4A",
         "hover_menu_button":"#343434",
+        "active_menu_button":"#2A2A2A",
         "priority_colors":["#3E2825", "#403324", "#23312A"],
-        "hover_priority_colors":["#6E3630", "#89632A", "#2B593F"]
+        "hover_priority_colors":["#6E3630", "#89632A", "#2B593F"],
+        "active_priority_colors":["#331F1D", "#352A1E", "#1E2A23"]
     }
 }
