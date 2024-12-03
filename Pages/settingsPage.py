@@ -44,7 +44,7 @@ class SettingsPage:
         settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], fg=self.theme['fg'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
         settings_btn.place(x=120, y=10)
 
-        tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['General', 'Appearance'], tabs_command=[lambda: self.tabs_commands('General'), lambda: self.tabs_commands('Appearance')])
+        tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], active_color=self.theme['active_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['General', 'Appearance'], tabs_command=[lambda: self.tabs_commands('General'), lambda: self.tabs_commands('Appearance')])
         tab_selection.place(x=10, y=10)
 
     def home_command(self):

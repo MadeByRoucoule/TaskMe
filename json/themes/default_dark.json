@@ -23,10 +23,12 @@
         "menu_button":"#4A4A4A",
         "hover_menu_button":"#343434",
         "active_menu_button":"#2A2A2A",
+        "menu_button_option":"#3A3A3A",
         "priority_colors":["#3E2825", "#403324", "#23312A"],
         "hover_priority_colors":["#6E3630", "#89632A", "#2B593F"],
         "active_priority_colors":["#331F1D", "#352A1E", "#1E2A23"],
         "hover_tab_selection":"#333333",
+        "active_tab_selection":"#2A2A2A",
         "separator_tab_selection":"#555555"
     }
 }
