@@ -1,4 +1,5 @@
 import tkinter as tk
+import datetime
 import platform
 if platform.system() == 'Windows':
     from hPyT import *
@@ -12,6 +13,9 @@ class MainPage:
         self.theme = theme
         self.page_manager = page_manager
         self.frame = tk.Frame(parent)
+
+        self.current_tab = 'All'
+        
         self.frames()
         self.widgets()
 
@@ -41,12 +45,12 @@ class MainPage:
 
     def widgets(self):
 
-        home_btn = widgets.Button(self.top_frame, text='Home', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], width=100, font=('San Francisco', 10, 'bold'), command=self.home_command)
+        home_btn = widgets.Button(self.top_frame, text='Home', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], fg=self.theme['fg'], width=100, font=('San Francisco', 10, 'bold'), command=self.home_command)
         home_btn.place(x=10, y=10)
-        settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
+        settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], fg=self.theme['fg'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
         settings_btn.place(x=120, y=10)
 
-        tab_selection = widgets.SelectionTab(self.left_frame, width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later')])
+        tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later')])
         tab_selection.place(x=10, y=10)
 
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
@@ -55,12 +59,8 @@ class MainPage:
         self.update_tasks_widgets()
 
     def tabs_commands(self, tab):
-        if tab == 'All':
-            print('1')
-        elif tab == 'Today':
-            print('2')
-        elif tab == 'Later':
-            print('3')
+        self.current_tab = tab
+        self.update_tasks_widgets()
 
     def home_command(self):
         self.page_manager.change_page('mainPage')
@@ -68,29 +68,55 @@ class MainPage:
     def settings_command(self):
         self.page_manager.change_page('settingsPage')
 
-    def update_tasks_widgets(self):
-        try:
-            self.w.place_forget()
-        except:
-            pass
+    def update_tasks_widgets(self, tab=None):
+        if tab is None:
+            tab = self.current_tab
+        
+        for widget in self.main_frame.winfo_children():
+            widget.destroy()
+
         task_manager = TasksManager()
         tasks = task_manager.load_tasks()
         y = 10
         x = 10
         tasks_per_row = 3
+
         for task in tasks['tasks']:
-            self.w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], date=task['date'], hour=task['hour'], priority=task['priority'], completed=True, fg=self.theme['fg'], priority_colors=self.theme['priority_colors'], hover_priority_colors=self.theme['hover_priority_colors'], width=250, tag=task['text'], command=lambda t=task['text']: self.open_task_window(t))
-            self.w.place(x=x, y=y)
-            tasks_per_row -= 1
-            if tasks_per_row == 0:
-                y = y + 100 + 10
-                x = 10
-                tasks_per_row = 3
-            else:
-                x = x + 250 + 10
+            if 'date' not in task:
+                task['date'] = ''
+            
+            if tab == 'All' or (tab == 'Today' and self.is_today(task['date'])) or (tab == 'Later' and not self.is_today(task['date'])):
+                w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], 
+                                    date=task.get('date', ''), hour=task.get('hour', ''), 
+                                    priority=task.get('priority', 'Low'), completed=True, 
+                                    fg=self.theme['fg'], 
+                                    priority_colors=self.theme['priority_colors'], 
+                                    hover_priority_colors=self.theme['hover_priority_colors'], 
+                                    width=250, tag=task['text'], 
+                                    command=lambda t=task['text']: self.open_task_window(t))
+                w.place(x=x, y=y)
+                tasks_per_row -= 1
+                if tasks_per_row == 0:
+                    y = y + 100 + 10
+                    x = 10
+                    tasks_per_row = 3
+                else:
+                    x = x + 250 + 10
+
+    def is_today(self, date_str):
+        if not date_str:
+            return False
+        try:
+            today = datetime.date.today()
+            task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
+            return task_date == today
+        except ValueError:  # Si le format de la date est invalide
+            print(f"Date invalide: {date_str}")
+            return False
 
     def open_task_window(self, tag):
         taskWindow = TaskWindow(self.parent, self.theme, tag)
+        self.update_tasks_widgets(self.current_tab)
 
     # -- ADD TASK WINDOW -- #
     def add_task(self):

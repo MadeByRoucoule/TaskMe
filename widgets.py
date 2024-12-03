@@ -437,7 +437,7 @@ class MenuButton:
 
 class SelectionTab:
     def __init__(self, parent, tabs_name:list[str], tabs_command:list[Callable], width=100, tab_height=50, radius:int = 15, font:Tuple[str, int] = ('San Francisco', 10, 'bold'), 
-                 bg:str = '', fg:str = '#FFFFFF', color:str = '', hover_color:str = '#343434', active_color:str = ''):
+                 bg:str = '', fg:str = '#FFFFFF', color:str = '', hover_color:str = '#343434', active_color:str = '', separator_color:str ='#555555'):
 
         # -- Initialization -- #
         self.parent = parent
@@ -453,6 +453,7 @@ class SelectionTab:
         self.color = color or self.bg
         self.hover_color = hover_color
         self.active_color = active_color
+        self.separator_color = separator_color
 
         if len(self.tabs_name) != len(self.tabs_command):
             raise ValueError("Le nombre de noms d'onglets doit correspondre au nombre de commandes d'onglets.")
@@ -474,7 +475,7 @@ class SelectionTab:
             self._binds(c, i)
 
             if i > 0 :
-                c.create_line(0+10, 0, self.width-10, 0, width=2, fill='#555555')
+                c.create_line(0+10, 0, self.width-10, 0, width=2, fill=self.separator_color)
 
     def _binds(self, tab_canvas, i):
         tab_canvas.tag_bind('hitbox', '<Enter>', lambda e, tab=tab_canvas: self._tab_hover(tab, 'enter'))
