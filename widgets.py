@@ -58,7 +58,7 @@ class Button:
             try:
                 self.c.itemconfig('btn_rect', fill=self.hover_color)
             except:
-                None
+                pass
         elif state == 'click' and self.command:
             self.c.itemconfig('btn_rect', fill=self.active_color)
 
@@ -471,15 +471,16 @@ class SelectionTab:
             c.create_text(self.width//2, self.tab_height//2, text=self.tabs_name[i], font=self.font, fill=self.fg, anchor='center')
             c.create_rectangle(0, 0, self.width, self.tab_height, fill='', outline='', tags='hitbox')
 
-            self._binds(c)
+            self._binds(c, i)
 
             if i > 0 :
                 c.create_line(0+10, 0, self.width-10, 0, width=2, fill='#555555')
 
-    def _binds(self, tab_canvas):
+    def _binds(self, tab_canvas, i):
         tab_canvas.tag_bind('hitbox', '<Enter>', lambda e, tab=tab_canvas: self._tab_hover(tab, 'enter'))
         tab_canvas.tag_bind('hitbox', '<Leave>', lambda e, tab=tab_canvas: self._tab_hover(tab, 'leave'))
-        tab_canvas.tag_bind('hitbox', '<Button-1>', lambda e, tab=tab_canvas: self._tab_hover(tab, 'leave'))
+        tab_canvas.tag_bind('hitbox', '<Button-1>', lambda e, tab=tab_canvas, index=i: self._tab_click('click', tab, index))
+        tab_canvas.tag_bind('hitbox', '<ButtonRelease-1>', lambda e, tab=tab_canvas, index=i: self._tab_click('release', tab, index))
 
     def _tab_hover(self, canvas, state): 
         if state == 'enter' :
@@ -487,6 +488,10 @@ class SelectionTab:
         else:
             fill_color = self.color
         canvas.itemconfig('tab_rect', fill=fill_color)
+
+    def _tab_click(self, state, canvas, i):
+        if state == 'release':
+            self.tabs_command[i]()
 
     def _get_parent_bg(self):
         window_color = self.parent.cget('bg')

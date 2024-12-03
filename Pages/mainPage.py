@@ -46,13 +46,21 @@ class MainPage:
         settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
         settings_btn.place(x=120, y=10)
 
-        tab_selection = widgets.SelectionTab(self.left_frame, width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=['cmd 1', 'cmd 2', 'cm 3'])
+        tab_selection = widgets.SelectionTab(self.left_frame, width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later')])
         tab_selection.place(x=10, y=10)
 
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
         btn.place(x=10, y=510)
 
         self.update_tasks_widgets()
+
+    def tabs_commands(self, tab):
+        if tab == 'All':
+            print('1')
+        elif tab == 'Today':
+            print('2')
+        elif tab == 'Later':
+            print('3')
 
     def home_command(self):
         self.page_manager.change_page('mainPage')
