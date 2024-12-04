@@ -55,6 +55,8 @@ class SettingsPage:
         btn = widgets.Button(self.left_frame, text='Save', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.save_settings)
         btn.place(x=10, y=510)
 
+        self.tabs_commands('General')
+
     def home_command(self):
         self.page_manager.change_page('mainPage')
 
