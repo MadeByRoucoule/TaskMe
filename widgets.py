@@ -671,3 +671,60 @@ class MultipleMenuButton:
         self.c.grid(**kwargs)
     def grid_forget(self, **kwargs):
         self.c.grid_forget(**kwargs)
+
+class CheckButton:
+    def __init__(self, parent, width:int=30, radius:int=10, checked:bool=True,
+                 bg:str='', fg:str='#FFFFFF', hover_color:str='#343434'):
+        
+        # -- Initialization -- #
+        self.parent = parent
+        self.width = width
+        self.r = radius
+        self.checked = checked
+        self.bg =  bg or self._get_parent_bg()
+        self.fg = fg
+        self.hover_color = hover_color
+
+        # -- Canvas Creation -- #
+        self.c = tk.Canvas(self.parent, width=self.width, height=self.width, bg=self.bg, highlightthickness=0)
+
+        self._draw()
+        self._binds()
+
+    def _draw(self):
+        create_rounded_rectangle(self.c, 5, 5, 25, 25, radius=self.r, fill=self.bg, outline='#9A9A9A', tags='check_rect')
+        if self.checked == True:
+            self.c.create_line(8, 15, 13, 20, width=2, fill=self.fg)
+            self.c.create_line(13, 20, 22, 11, width=2, fill=self.fg)
+        self.c.create_rectangle(0,0, self.width, self.width, tags='hitbox')
+
+    def _binds(self):
+        self.c.tag_bind('hitbox', '<Enter>', lambda: self._check_hover('enter'))
+        self.c.tag_bind('hitbox', '<Enter>', lambda: self._check_hover('leave'))
+
+    def _check_hover(self, state):
+        if state == 'enter':
+            self.c.itemconfig('check_rect', fill=self.hover_color)
+        else:
+            self.c.itemconfig('check_rect', fill=self.bg)
+    
+    def _get_parent_bg(self):
+        window_color = self.parent.cget('bg')
+        rgb_values = self.parent.winfo_rgb(window_color)
+        return '#{:02x}{:02x}{:02x}'.format(rgb_values[0] // 256, rgb_values[1] // 256, rgb_values[2] // 256)
+
+    # -- Layout Methods -- #
+    def pack(self, **kwargs):
+        self.c.pack(**kwargs)
+    def pack_forget(self, **kwargs):
+        self.c.pack_forget(**kwargs)
+
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+    def place_forget(self, **kwargs):
+        self.c.place_forget(**kwargs)
+
+    def grid(self, **kwargs):
+        self.c.grid(**kwargs)
+    def grid_forget(self, **kwargs):
+        self.c.grid_forget(**kwargs)
