@@ -54,7 +54,7 @@ class MainPage:
         sorted_menubutton = widgets.MultipleMenuButton(self.top_frame, text='Sorted by', color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], options=['Time', 'Priority'], width=150, command=self.update_sort_options)
         sorted_menubutton.place(x=840, y=10)
 
-        tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], active_color=self.theme['active_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later')])
+        tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], active_color=self.theme['active_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['All', 'Today', 'Later', 'Before'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later'), lambda: self.tabs_commands('Before')])
         tab_selection.place(x=10, y=10)
 
         btn = widgets.Button(self.left_frame, text='Add Task', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=190, font=('San Francisco', 10, 'bold'), command=self.add_task)
@@ -85,7 +85,9 @@ class MainPage:
         if tab == 'Today':
             tasks = [task for task in tasks if self.is_today(task.get('date', ''))]
         elif tab == 'Later':
-            tasks = [task for task in tasks if not self.is_today(task.get('date', ''))]
+            tasks = [task for task in tasks if self.is_future(task.get('date', ''))]
+        elif tab == 'Before':
+            tasks = [task for task in tasks if self.is_before(task.get('date', ''))]
 
         if 'Time' in self.current_sort_options:
             tasks.sort(key=lambda x: (x.get('date', ''), x.get('hour', '')))
@@ -124,6 +126,29 @@ class MainPage:
             task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
             return task_date == today
         except ValueError: 
+            print(f"Date invalide: {date_str}")
+            return False
+        
+    def is_future(self, date_str):
+        if not date_str:
+            return False
+        try:
+            today = datetime.date.today()
+            task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
+            return task_date > today
+        except ValueError:
+            print(f"Date invalide: {date_str}")
+            return False
+    
+    def is_before(self, date_str):
+        """Vérifie si la date est avant aujourd'hui."""
+        if not date_str:
+            return False
+        try:
+            today = datetime.date.today()
+            task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
+            return task_date < today
+        except ValueError:
             print(f"Date invalide: {date_str}")
             return False
 
