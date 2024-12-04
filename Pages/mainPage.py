@@ -141,7 +141,6 @@ class MainPage:
             return False
     
     def is_before(self, date_str):
-        """Vérifie si la date est avant aujourd'hui."""
         if not date_str:
             return False
         try:
