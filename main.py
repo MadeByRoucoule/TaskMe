@@ -2,7 +2,7 @@ import tkinter as tk
 import platform
 if platform.system() == 'Windows':
     from hPyT import *
-# -- Pages -- #
+# -- Managers -- #
 from Managers.pagesManager import PageManager
 from Managers.themeManager import ThemeManager
 
