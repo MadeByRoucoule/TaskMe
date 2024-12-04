@@ -3,13 +3,19 @@ import tkinter as tk
 from typing import Tuple, Optional, Callable, List
 
 # -- Utility Functions -- #
-def create_rounded_rectangle(canvas: tk.Canvas, x1: int, y1: int, x2: int, y2: int, radius: int, **kwargs) -> int:
-    points = [
-        x1+radius, y1, x1+radius, y1, x2-radius, y1, x2-radius, y1, x2, y1,
-        x2, y1+radius, x2, y1+radius, x2, y2-radius, x2, y2-radius, x2, y2,
-        x2-radius, y2, x2-radius, y2, x1+radius, y2, x1+radius, y2, x1, y2,
-        x1, y2-radius, x1, y2-radius, x1, y1+radius, x1, y1+radius, x1, y1
-    ]
+def create_rounded_rectangle(canvas, x1:int, y1:int, x2:int, y2:int, radius:int, **kwargs):
+    points = [x1+radius, y1,
+                x1+radius, y1, x2-radius, y1,
+                x2-radius, y1, x2, y1,
+                x2, y1+radius, x2, y1+radius,
+                x2, y2-radius, x2, y2-radius,
+                x2, y2, x2-radius, y2,
+                x2-radius, y2, x1+radius, y2,
+                x1+radius, y2, x1, y2,
+                x1, y2-radius, x1, y2-radius,
+                x1, y1+radius, x1, y1+radius,
+                x1, y1]
+
     return canvas.create_polygon(points, **kwargs, smooth=True)
 
 class Button:
@@ -656,6 +662,59 @@ class MultipleMenuButton:
         rgb_values = self.parent.winfo_rgb(window_color)
         return '#{:02x}{:02x}{:02x}'.format(rgb_values[0] // 256, rgb_values[1] // 256, rgb_values[2] // 256)
     
+    # -- Layout Methods -- #
+    def pack(self, **kwargs):
+        self.c.pack(**kwargs)
+    def pack_forget(self, **kwargs):
+        self.c.pack_forget(**kwargs)
+
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+    def place_forget(self, **kwargs):
+        self.c.place_forget(**kwargs)
+
+    def grid(self, **kwargs):
+        self.c.grid(**kwargs)
+    def grid_forget(self, **kwargs):
+        self.c.grid_forget(**kwargs)
+
+class Switch:
+    def __init__(self, parent, width:int=68, height:int=34, radius:int=34, state:bool=False,
+                 color:str='#333333', active_color:str='#446644', circle_color:str='#2F2F2F', border_color:str='#202020',
+                 bg=''):
+
+        # -- Initialization -- #       
+        self.parent = parent
+        self.width = width
+        self.height = height
+        self.r = radius
+        self.state = state
+        self.color = color
+        self.active_color = active_color
+        self.circle_color = circle_color
+        self.border_color = border_color
+        self.bg = bg or self._get_parent_bg()
+
+        # -- Canvas Creation -- #
+        self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
+
+        self._draw()
+
+    def _draw(self):
+        if self.state == False:
+            create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.border_color)
+            create_rounded_rectangle(self.c, 2, 2, self.width-4, self.height-4, radius=self.r, fill=self.color)
+            self.c.create_oval(2, 2, self.height-4, self.height-4, fill=self.color, outline=self.border_color, width=1)
+        elif self.state == True:
+            create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.border_color)
+            create_rounded_rectangle(self.c, 2, 2, self.width-4, self.height-4, radius=self.r-4, fill=self.active_color)
+            self.c.create_oval(self.width-2, 2, self.width-(self.height-4), self.height-4, fill=self.color, outline=self.border_color, width=1)
+
+    def _get_parent_bg(self):
+        window_color = self.parent.cget('bg')
+        rgb_values = self.parent.winfo_rgb(window_color)
+        return '#{:02x}{:02x}{:02x}'.format(rgb_values[0] // 256, rgb_values[1] // 256, rgb_values[2] // 256)
+
     # -- Layout Methods -- #
     def pack(self, **kwargs):
         self.c.pack(**kwargs)
