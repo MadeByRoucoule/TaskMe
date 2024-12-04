@@ -307,7 +307,7 @@ class Entry:
 class MenuButton:
     def __init__(self, parent, text:str = 'Menu Button', options: Tuple[str] = ('Option 1', 'Option 2', 'Option 3'), font: Tuple = ('San Francisco', 10),
                  width: int = 100, height: int = 30, radius: int = 15, 
-                 color: str = '#4A4A4A', hover_color: str = '#343434', active_color:str = '#2A2A2A', 
+                 color: str = '#4A4A4A', hover_color: str = '#343434', active_color:str = '#2A2A2A', option_color:str = '#3A3A3A', 
                  fg: str = '#FFFFFF', bg: str = '', command: Optional[Callable] = None):
         
         # -- Initialization -- #
@@ -321,6 +321,7 @@ class MenuButton:
         self.color = color
         self.hover_color = hover_color
         self.active_color = active_color
+        self.option_color = option_color
         self.bg = bg or self._get_parent_bg()
         self.fg = fg
         self.command = command
@@ -374,7 +375,7 @@ class MenuButton:
             option_canvas = tk.Canvas(self.dropdown_window, width=self.width, height=30, bg=self.bg, highlightthickness=0)
             option_canvas.pack(fill=tk.X)
 
-            create_rounded_rectangle(option_canvas, 0, 0, self.width, 30, radius=self.r, fill=self.color, tags='option_rect')
+            create_rounded_rectangle(option_canvas, 0, 0, self.width, 30, radius=self.r, fill=self.option_color, tags='option_rect')
             option_canvas.create_text(10, 15, text=option, font=self.font, fill=self.fg, anchor='w')
             option_canvas.create_rectangle(0, 0, self.width, 30, fill='', outline='', tags='hitbox')
 
@@ -411,8 +412,11 @@ class MenuButton:
         if self.command:
             self.command(option)
 
-    def _option_hover(self, canvas, state):
-        fill_color = self.hover_color if state == 'enter' else self.color
+    def _option_hover(self, canvas, state): 
+        if state == 'enter':
+            fill_color = self.hover_color
+        else:
+            fill_color = self.option_color
         canvas.itemconfig('option_rect', fill=fill_color)
 
     def _get_parent_bg(self):

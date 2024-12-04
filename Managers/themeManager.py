@@ -11,7 +11,6 @@ class ThemeManager:
     def load_themes_names(self):
         themes_names = []
         for i in range(len(self.themes_files)):
-            print(i)
             with open(f'json/themes/{self.themes_files[i]}', 'r') as t:
                 themes_file = json.load(t)
             themes_names.append(themes_file['name'])

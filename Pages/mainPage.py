@@ -15,6 +15,7 @@ class MainPage:
         self.frame = tk.Frame(parent)
 
         self.current_tab = 'All'
+        self.current_sort_options = []
         
         self.frames()
         self.widgets()
@@ -50,7 +51,7 @@ class MainPage:
         settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], fg=self.theme['fg'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
         settings_btn.place(x=120, y=10)
 
-        sorted_menubutton = widgets.MultipleMenuButton(self.top_frame, text='Sorted by', options=['Time', 'Priority'], width=150)
+        sorted_menubutton = widgets.MultipleMenuButton(self.top_frame, text='Sorted by', color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], options=['Time', 'Priority'], width=150, command=self.update_sort_options)
         sorted_menubutton.place(x=840, y=10)
 
         tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], active_color=self.theme['active_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['All', 'Today', 'Later'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later')])
@@ -79,32 +80,41 @@ class MainPage:
             widget.destroy()
 
         task_manager = TasksManager()
-        tasks = task_manager.load_tasks()
+        tasks = task_manager.load_tasks()['tasks']
+
+        if tab == 'Today':
+            tasks = [task for task in tasks if self.is_today(task.get('date', ''))]
+        elif tab == 'Later':
+            tasks = [task for task in tasks if not self.is_today(task.get('date', ''))]
+
+        if 'Time' in self.current_sort_options:
+            tasks.sort(key=lambda x: (x.get('date', ''), x.get('hour', '')))
+        
+        if 'Priority' in self.current_sort_options:
+            priority_order = {'High': 0, 'Medium': 1, 'Low': 2}
+            tasks.sort(key=lambda x: priority_order.get(x.get('priority', 'Low'), 3))
+
         y = 10
         x = 10
         tasks_per_row = 3
 
-        for task in tasks['tasks']:
-            if 'date' not in task:
-                task['date'] = ''
-            
-            if tab == 'All' or (tab == 'Today' and self.is_today(task['date'])) or (tab == 'Later' and not self.is_today(task['date'])):
-                w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], 
-                                    date=task.get('date', ''), hour=task.get('hour', ''), 
-                                    priority=task.get('priority', 'Low'), completed=True, 
-                                    fg=self.theme['fg'], 
-                                    priority_colors=self.theme['priority_colors'], 
-                                    hover_priority_colors=self.theme['hover_priority_colors'], 
-                                    width=250, tag=task['text'], 
-                                    command=lambda t=task['text']: self.open_task_window(t))
-                w.place(x=x, y=y)
-                tasks_per_row -= 1
-                if tasks_per_row == 0:
-                    y = y + 100 + 10
-                    x = 10
-                    tasks_per_row = 3
-                else:
-                    x = x + 250 + 10
+        for task in tasks:
+            w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], 
+                                date=task.get('date', ''), hour=task.get('hour', ''), 
+                                priority=task.get('priority', 'Low'), completed=True, 
+                                fg=self.theme['fg'], 
+                                priority_colors=self.theme['priority_colors'], 
+                                hover_priority_colors=self.theme['hover_priority_colors'], 
+                                width=250, tag=task['text'], 
+                                command=lambda t=task['text']: self.open_task_window(t))
+            w.place(x=x, y=y)
+            tasks_per_row -= 1
+            if tasks_per_row == 0:
+                y += 100 + 10
+                x = 10
+                tasks_per_row = 3
+            else:
+                x += 250 + 10
 
     def is_today(self, date_str):
         if not date_str:
@@ -113,9 +123,13 @@ class MainPage:
             today = datetime.date.today()
             task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
             return task_date == today
-        except ValueError:  # Si le format de la date est invalide
+        except ValueError: 
             print(f"Date invalide: {date_str}")
             return False
+
+    def update_sort_options(self, selected_options):
+        self.current_sort_options = selected_options
+        self.update_tasks_widgets()
 
     def open_task_window(self, tag):
         taskWindow = TaskWindow(self.parent, self.theme, tag)
@@ -143,7 +157,7 @@ class MainPage:
         self.date_entry.pack(pady=5)
         self.hour_entry = widgets.Entry(self.add_task_win, color=self.theme["entry"], border_color=self.theme['entry_border'], placeholder_text='Hour (ex: 12h00)', width=200)
         self.hour_entry.pack(pady=5)
-        self.priority_btn = widgets.MenuButton(self.add_task_win, options=priority, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], width=200)
+        self.priority_btn = widgets.MenuButton(self.add_task_win, options=priority, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
         self.priority_btn.pack(pady=5)
 
         self.cancel_btn = widgets.Button(self.add_task_win, text='Cancel', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], active_color=self.theme['active_red_button'], width=200,command=lambda: self.add_task_win.destroy())
