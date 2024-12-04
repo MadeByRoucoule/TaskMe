@@ -93,7 +93,7 @@ class SettingsPage:
         notifications_check = tk.Checkbutton(self.main_frame, variable=self.notifications_var, bg=self.theme['main_frame'], fg=self.theme['fg'])
         notifications_check.pack(anchor='w', padx=10)
 
-        check = widgets.CheckButton(self.main_frame)
+        check = widgets.Switch(self.main_frame)
         check.pack(anchor='w', padx=10)
 
     def load_appearance_settings(self):
