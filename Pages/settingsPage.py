@@ -1,5 +1,6 @@
 import tkinter as tk
 import platform
+import customtkinter
 if platform.system() == 'Windows':
     from hPyT import *
 import widgets
@@ -90,11 +91,8 @@ class SettingsPage:
         notifications_label.pack(anchor='w', padx=10, pady=(20, 5))  
 
         self.notifications_var = tk.BooleanVar()
-        notifications_check = tk.Checkbutton(self.main_frame, variable=self.notifications_var, bg=self.theme['main_frame'], fg=self.theme['fg'])
-        notifications_check.pack(anchor='w', padx=10)
-
-        check = widgets.Switch(self.main_frame)
-        check.pack(anchor='w', padx=10)
+        switch = widgets.Switch(self.main_frame, state=True)
+        switch.pack(anchor='w', padx=10)
 
     def load_appearance_settings(self):
         theme_label = tk.Label(self.main_frame, text="Theme:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
