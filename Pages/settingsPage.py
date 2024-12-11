@@ -79,34 +79,66 @@ class SettingsPage:
             self.load_appearance_settings()
 
     def load_general_settings(self):
-        language_label = tk.Label(self.main_frame, text="Language:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
-        language_label.pack(anchor='w', padx=10, pady=(20, 5))
+
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
+
+        language_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
+        language_frame.pack(fill='x', pady=10)
+
+        language_label = tk.Label(language_frame, text="Language:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
+        language_label.pack(side='left', padx=15)
 
         language_options = ['English', 'Français', 'Español']
-        language_menu = widgets.MenuButton(self.main_frame, options=language_options, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
-        language_menu.pack(anchor='w', padx=10, pady=5)
+        language_menu = widgets.MenuButton(language_frame, text='Language', options=language_options, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
+        language_menu.pack(side='right', padx=15)
 
-        notifications_label = tk.Label(self.main_frame, text="Enable Notifications:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
-        notifications_label.pack(anchor='w', padx=10, pady=(20, 5))  
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
+
+        notifications_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
+        notifications_frame.pack(fill='x', pady=10)
+
+        notifications_label = tk.Label(notifications_frame, text="Enable Notifications:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
+        notifications_label.pack(side='left', padx=15)  
 
         self.notifications_var = tk.BooleanVar()
-        switch = widgets.Switch(self.main_frame, state=True)
-        switch.pack(anchor='w', padx=10)
+        switch = widgets.Switch(notifications_frame, state=True)
+        switch.pack(side='right', padx=15)
+
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
 
     def load_appearance_settings(self):
-        theme_label = tk.Label(self.main_frame, text="Theme:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
-        theme_label.pack(anchor='w', padx=10, pady=(20, 5))
 
-        theme_menu = widgets.MenuButton(self.main_frame, options=self.theme_names, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
-        theme_menu.pack(anchor='w', padx=10, pady=5) 
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
 
-        font_size_label = tk.Label(self.main_frame, text="Font Size:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
-        font_size_label.pack(anchor='w', padx=10, pady=(20, 5))
+        theme_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
+        theme_frame.pack(fill='x', pady=10)
+
+        theme_label = tk.Label(theme_frame, text="Theme:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
+        theme_label.pack(side='left', padx=15)
+
+        theme_menu = widgets.MenuButton(theme_frame, text='Theme', options=self.theme_names, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
+        theme_menu.pack(side='right', padx=15) 
+
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
+
+        font_size_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
+        font_size_frame.pack(fill='x', pady=10)
+
+        font_size_label = tk.Label(font_size_frame, text="Font Size:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
+        font_size_label.pack(side='left', padx=15)
 
         self.font_size_var = tk.IntVar(value=12)
-        font_size_scale = tk.Scale(self.main_frame, from_=8, to=20, orient=tk.HORIZONTAL, variable=self.font_size_var,
+        font_size_scale = tk.Scale(font_size_frame, from_=8, to=20, orient=tk.HORIZONTAL, variable=self.font_size_var,
                                 bg=self.theme['main_frame'], fg=self.theme['fg'], highlightthickness=0)
-        font_size_scale.pack(anchor='w', padx=10)
+        font_size_scale.pack(side='right', padx=15)
+
+        separator = widgets.Separator(self.main_frame)
+        separator.pack(fill='x', pady=5)
 
     def save_settings(self):
         pass
