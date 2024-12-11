@@ -29,6 +29,7 @@
         "active_priority_colors": ["#B88A86", "#AD9C80", "#9EB3A2"],
         "hover_tab_selection":"#D0D0D0",
         "active_tab_selection":"#C0C0C0",
-        "separator_tab_selection":"#BBBBBB"
+        "separator_tab_selection":"#BBBBBB",
+        "separator":"#CCCCCC"
     }
 }

@@ -80,7 +80,7 @@ class SettingsPage:
 
     def load_general_settings(self):
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
         language_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
@@ -93,7 +93,7 @@ class SettingsPage:
         language_menu = widgets.MenuButton(language_frame, text='Language', options=language_options, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
         language_menu.pack(side='right', padx=15)
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
         notifications_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
@@ -106,12 +106,12 @@ class SettingsPage:
         switch = widgets.Switch(notifications_frame, state=True)
         switch.pack(side='right', padx=15)
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
     def load_appearance_settings(self):
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
         theme_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
@@ -123,7 +123,7 @@ class SettingsPage:
         theme_menu = widgets.MenuButton(theme_frame, text='Theme', options=self.theme_names, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
         theme_menu.pack(side='right', padx=15) 
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
         font_size_frame = tk.Frame(self.main_frame, bg=self.theme['main_frame'])
@@ -137,7 +137,7 @@ class SettingsPage:
                                 bg=self.theme['main_frame'], fg=self.theme['fg'], highlightthickness=0)
         font_size_scale.pack(side='right', padx=15)
 
-        separator = widgets.Separator(self.main_frame)
+        separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
     def save_settings(self):

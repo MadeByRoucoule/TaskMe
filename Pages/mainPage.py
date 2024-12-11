@@ -1,5 +1,5 @@
 import tkinter as tk
-import datetime
+from datetime import datetime
 import platform
 if platform.system() == 'Windows':
     from hPyT import *
@@ -12,6 +12,7 @@ class MainPage:
         self.parent = parent
         self.theme = theme
         self.page_manager = page_manager
+        self.task_manager = TasksManager()
         self.frame = tk.Frame(parent)
 
         self.current_tab = 'All'
@@ -75,48 +76,46 @@ class MainPage:
     def update_tasks_widgets(self, tab=None):
         if tab is None:
             tab = self.current_tab
-        
         for widget in self.main_frame.winfo_children():
             widget.destroy()
-
-        task_manager = TasksManager()
-        tasks = task_manager.load_tasks()['tasks']
-
-        if tab == 'Today':
-            tasks = [task for task in tasks if self.is_today(task.get('date', ''))]
-        elif tab == 'Later':
-            tasks = [task for task in tasks if self.is_future(task.get('date', ''))]
-        elif tab == 'Before':
-            tasks = [task for task in tasks if self.is_before(task.get('date', ''))]
-
-        if 'Time' in self.current_sort_options:
-            tasks.sort(key=lambda x: (x.get('date', ''), x.get('hour', '')))
         
-        if 'Priority' in self.current_sort_options:
-            priority_order = {'High': 0, 'Medium': 1, 'Low': 2}
-            tasks.sort(key=lambda x: priority_order.get(x.get('priority', 'Low'), 3))
+        tasks = self.task_manager.get_sorted_tasks(tab, self.current_sort_options)
 
         y = 10
         x = 10
         tasks_per_row = 3
-
         for task in tasks:
-            w = widgets.TaskWidget(self.main_frame, radius=25, text=task['text'], 
-                                date=task.get('date', ''), hour=task.get('hour', ''), 
-                                priority=task.get('priority', 'Low'), completed=True, 
-                                fg=self.theme['fg'], 
-                                priority_colors=self.theme['priority_colors'], 
-                                hover_priority_colors=self.theme['hover_priority_colors'], 
-                                width=250, tag=task['text'], 
-                                command=lambda t=task['text']: self.open_task_window(t))
+            w = widgets.TaskWidget(
+                self.main_frame,
+                radius=25,
+                text=task['text'],
+                date=task.get('date', ''),
+                hour=task.get('hour', ''),
+                priority=task.get('priority', 'Low'),
+                completed=True,
+                fg=self.theme['fg'],
+                priority_colors=self.theme['priority_colors'],
+                hover_priority_colors=self.theme['hover_priority_colors'],
+                width=250,
+                tag=task['text'],
+                command=lambda t=task['text']: self.open_task_window(t)
+            )
             w.place(x=x, y=y)
             tasks_per_row -= 1
             if tasks_per_row == 0:
-                y += 100 + 10
+                y += 110
                 x = 10
                 tasks_per_row = 3
             else:
-                x += 250 + 10
+                x += 260
+
+    def update_sort_options(self, selected_options):
+        for option in ['Time', 'Priority']:
+            if option in selected_options and option not in self.current_sort_options:
+                self.current_sort_options.append(option)
+            elif option not in selected_options and option in self.current_sort_options:
+                self.current_sort_options.remove(option)
+        self.update_tasks_widgets()
 
     def is_today(self, date_str):
         if not date_str:
@@ -150,10 +149,6 @@ class MainPage:
         except ValueError:
             print(f"Date invalide: {date_str}")
             return False
-
-    def update_sort_options(self, selected_options):
-        self.current_sort_options = selected_options
-        self.update_tasks_widgets()
 
     def open_task_window(self, tag):
         taskWindow = TaskWindow(self.parent, self.theme, tag)
