@@ -1,9 +1,8 @@
 import tkinter as tk
 import platform
-import customtkinter
 if platform.system() == 'Windows':
     from hPyT import *
-import widgets
+import Widgets as widgets
 from Managers.themeManager import *
 
 class SettingsPage:
