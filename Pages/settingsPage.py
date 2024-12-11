@@ -132,13 +132,12 @@ class SettingsPage:
         font_size_label = tk.Label(font_size_frame, text="Font Size:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         font_size_label.pack(side='left', padx=15)
 
-        self.font_size_var = tk.IntVar(value=12)
-        font_size_scale = tk.Scale(font_size_frame, from_=8, to=20, orient=tk.HORIZONTAL, variable=self.font_size_var,
-                                bg=self.theme['main_frame'], fg=self.theme['fg'], highlightthickness=0)
-        font_size_scale.pack(side='right', padx=15)
+        slider = widgets.Slider(font_size_frame)
+        slider.pack(side='right', padx=15)
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
+
 
     def save_settings(self):
         pass
