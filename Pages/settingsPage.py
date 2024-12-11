@@ -94,8 +94,9 @@ class SettingsPage:
         language_label.pack(side='left', padx=15)
 
         language_options = ['English', 'Français', 'Español']
-        language_menu = widgets.MenuButton(language_frame, text='Language', options=language_options, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
-        language_menu.pack(side='right', padx=15)
+        self.language_menu = widgets.MenuButton(language_frame, text='Language', options=language_options, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
+        self.language_menu.select_option(self.settings['language'])
+        self.language_menu.pack(side='right', padx=15)
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
@@ -106,9 +107,8 @@ class SettingsPage:
         notifications_label = tk.Label(notifications_frame, text="Enable Notifications:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         notifications_label.pack(side='left', padx=15)  
 
-        self.notifications_var = tk.BooleanVar()
-        switch = widgets.Switch(notifications_frame, state=True)
-        switch.pack(side='right', padx=15)
+        self.notifications_switch = widgets.Switch(notifications_frame, state=self.settings['notifications'])
+        self.notifications_switch.pack(side='right', padx=15)
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
@@ -124,8 +124,8 @@ class SettingsPage:
         theme_label = tk.Label(theme_frame, text="Theme:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         theme_label.pack(side='left', padx=15)
 
-        theme_menu = widgets.MenuButton(theme_frame, text='Theme', options=self.theme_names, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
-        theme_menu.pack(side='right', padx=15) 
+        self.theme_menu = widgets.MenuButton(theme_frame, text='Theme', options=self.theme_names, color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], width=200)
+        self.theme_menu.pack(side='right', padx=15) 
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
@@ -136,12 +136,22 @@ class SettingsPage:
         font_size_label = tk.Label(font_size_frame, text="Font Size:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         font_size_label.pack(side='left', padx=15)
 
-        slider = widgets.Slider(font_size_frame, width=170)
-        slider.pack(side='right', padx=15)
+        self.font_size_slider = widgets.Slider(font_size_frame, width=170, start=10, end=20, ticks=11)
+        self.font_size_slider.set(self.settings['font_size'])
+        self.font_size_slider.pack(side='right', padx=15)
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
         separator.pack(fill='x', pady=5)
 
 
     def save_settings(self):
-        pass
+        try:
+            self.settings['language'] = self.language_menu.selected_option
+        except:pass
+        try:
+            self.settings['notifications'] = self.notifications_switch.state
+        except: pass
+        try:
+            self.settings['font_size'] = self.font_size_slider.value
+        except: pass
+        self.settings_manager.save_settings(self.settings)

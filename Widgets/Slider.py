@@ -1,8 +1,8 @@
 import tkinter as tk
 
 class Slider:
-    def __init__(self, parent, width:int=150, height:int=30, start:int=10, end:int=20, text_value:bool=True, 
-                 color:str='#049D56', line_color:str='#313131', bg:str='', fg:str='#ffffff', ticks:int=10, callback=None):
+    def __init__(self, parent, width:int=150, height:int=30, start:int=0, end:int=100, text_value:bool=True, 
+                 color:str='#049D56', line_color:str='#313131', bg:str='', fg:str='#ffffff', ticks:int=101, callback=None):
     
         # -- Initialization -- #
         self.parent = parent
@@ -77,27 +77,23 @@ class Slider:
         self._update_slider(event.x)
 
     def _update_slider(self, x):
-        # Contrainte du mouvement du slider entre les bords
-        x = max(self.height//2, min(x, self.width - self.height//2))
+        x = max(self.height // 2, min(x, self.width - self.height // 2))
 
-        # Aligner la valeur sur le cran le plus proche
         tick_spacing = (self.width - self.height) / (self.ticks - 1)
-        nearest_tick = round((x - self.height // 2) / tick_spacing) * tick_spacing + self.height // 2
-        self.value = self._x_to_value(nearest_tick)
+        nearest_tick_index = round((x - self.height // 2) / tick_spacing)
+        self.value = self.start + nearest_tick_index * ((self.end - self.start) / (self.ticks - 1))
 
-        # Mettre à jour la position du slider et de la ligne colorée
+        x_aligned = nearest_tick_index * tick_spacing + self.height // 2
         self.c.coords(self.slider, 
-            nearest_tick - self.slider_radius, self.height//2 - self.slider_radius, 
-            nearest_tick + self.slider_radius, self.height//2 + self.slider_radius
+            x_aligned - self.slider_radius, self.height // 2 - self.slider_radius, 
+            x_aligned + self.slider_radius, self.height // 2 + self.slider_radius
         )
         self.c.coords(self.colored_line,
-            self.height//2, self.height//2, nearest_tick, self.height//2
+            self.height // 2, self.height // 2, x_aligned, self.height // 2
         )
 
-        # Mettre à jour le label si celui-ci a été créé
         if self.text_value and hasattr(self, 'value_label'):
-            self.value_label.config(text=str(self.value))  # Mettre à jour le texte du label
-
+            self.value_label.config(text=str(round(self.value)))
 
     def _value_to_x(self):
         return int((self.value - self.start) / (self.end - self.start) * 
@@ -115,20 +111,11 @@ class Slider:
             rgb_values[1] // 256, 
             rgb_values[2] // 256
         )
-    
-    def get(self):
-        return self.value
 
     def set(self, value):
         self.value = max(self.start, min(value, self.end))
         x = self._value_to_x()
-        self.c.coords(self.slider, 
-            x-self.slider_radius, self.height//2-self.slider_radius, 
-            x+self.slider_radius, self.height//2+self.slider_radius
-        )
-        self.c.coords(self.colored_line,
-            self.height//2, self.height//2, x, self.height//2
-        )
+        self._update_slider(x)
 
     # Méthodes de layout standard
     def pack(self, **kwargs):
