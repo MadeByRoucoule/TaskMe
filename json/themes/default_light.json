@@ -20,8 +20,8 @@
         "active_button": "#A0A0A0",
         "entry": "#FEFEFE",
         "entry_border": "#C0C0C0",
-        "menu_button":"#B2B2B2",
-        "hover_menu_button":"#8C8C8C",
+        "menu_button":"#C0C0C0",
+        "hover_menu_button":"#B0B0B0",
         "active_menu_button":"#787878",
         "menu_button_option":"#BCBCBC",
         "priority_colors": ["#C48883", "#BCA37A", "#99BF9D"],
@@ -30,6 +30,12 @@
         "hover_tab_selection":"#D0D0D0",
         "active_tab_selection":"#C0C0C0",
         "separator_tab_selection":"#BBBBBB",
-        "separator":"#CCCCCC"
+        "separator":"#CCCCCC",
+        "switch_color":"#B2B2B2",
+        "active_switch_color":"#049D56",
+        "switch_border_color":"#8C8C8C",
+        "active_switch_border_color":"#038F4D",
+        "slider_color":"#049D56",
+        "slider_line_color":"#B2B2B2"
     }
 }

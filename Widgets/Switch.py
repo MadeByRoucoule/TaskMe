@@ -19,8 +19,7 @@ def create_rounded_rectangle(canvas, x1:int, y1:int, x2:int, y2:int, radius:int,
 
 class Switch:
     def __init__(self, parent, width:int=60, height:int=32, radius:int=32, state:bool=False,
-                 color:str='#2B2F31', border_color:str='#35393B', active_color:str='#049D56', active_border_color:str='#038F4D',
-                 circle_color:str='#2F2F2F', bg=''):
+                 color:str='#2B2F31', border_color:str='#35393B', active_color:str='#049D56', active_border_color:str='#038F4D', bg=''):
 
         # -- Initialization -- #       
         self.parent = parent
@@ -32,8 +31,8 @@ class Switch:
         self.border_color = border_color
         self.active_color = active_color
         self.active_border_color = active_border_color
-        self.circle_color = circle_color
         self.bg = bg or self._get_parent_bg()
+        self.circle_color = self.bg
 
         # -- Canvas Creation -- #
         self.c = tk.Canvas(self.parent, width=self.width, height=self.height, bg=self.bg, highlightthickness=0)
@@ -44,7 +43,7 @@ class Switch:
     def _draw(self):
         if self.state == False:
             create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.border_color, tags='border')
-            create_rounded_rectangle(self.c, 1, 1, self.width-2, self.height-2, radius=self.r, fill=self.color, tags='rect')
+            create_rounded_rectangle(self.c, 1, 1, self.width-1, self.height-1, radius=self.r, fill=self.color, tags='rect')
             self.c.create_oval(2, 2, self.height-3, self.height-3, fill=self.bg, width=0, tags='round')
         elif self.state == True:
             create_rounded_rectangle(self.c, 0, 0, self.width, self.height, radius=self.r, fill=self.active_border_color, tags='border')

@@ -30,6 +30,12 @@
         "hover_tab_selection":"#333333",
         "active_tab_selection":"#2A2A2A",
         "separator_tab_selection":"#555555",
-        "separator":"#444444"
+        "separator":"#444444",
+        "switch_color":"#2B2F31",
+        "active_switch_color":"#049D56",
+        "switch_border_color":"#35393B",
+        "active_switch_border_color":"#038F4D",
+        "slider_color":"#049D56",
+        "slider_line_color":"#313131"
     }
 }

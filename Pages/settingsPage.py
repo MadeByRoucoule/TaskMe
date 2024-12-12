@@ -107,7 +107,7 @@ class SettingsPage:
         notifications_label = tk.Label(notifications_frame, text="Enable Notifications:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         notifications_label.pack(side='left', padx=15)  
 
-        self.notifications_switch = widgets.Switch(notifications_frame, state=self.settings['notifications'])
+        self.notifications_switch = widgets.Switch(notifications_frame, color=self.theme['switch_color'], active_color=self.theme['active_switch_color'], border_color=self.theme['switch_border_color'], active_border_color=self.theme['active_switch_border_color'], state=self.settings['notifications'])
         self.notifications_switch.pack(side='right', padx=15)
 
         separator = widgets.Separator(self.main_frame, color=self.theme['separator'])
@@ -136,7 +136,7 @@ class SettingsPage:
         font_size_label = tk.Label(font_size_frame, text="Font Size:", font=self.title_font, bg=self.theme['main_frame'], fg=self.theme['fg'])
         font_size_label.pack(side='left', padx=15)
 
-        self.font_size_slider = widgets.Slider(font_size_frame, width=170, start=10, end=20, ticks=11)
+        self.font_size_slider = widgets.Slider(font_size_frame, color=self.theme['slider_color'], line_color=self.theme['slider_line_color'], width=170, start=10, end=20, ticks=11, fg=self.theme['fg'])
         self.font_size_slider.set(self.settings['font_size'])
         self.font_size_slider.pack(side='right', padx=15)
 
