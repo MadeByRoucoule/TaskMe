@@ -4,8 +4,7 @@ import platform
 if platform.system() == 'Windows':
     from hPyT import *
 # -- Managers -- #
-from Managers.pagesManager import PageManager
-from Managers.themeManager import ThemeManager
+import Managers as manager
 
 class App(tk.Tk):
     def __init__(self, *arg, **kwargs):
@@ -14,11 +13,11 @@ class App(tk.Tk):
         self.center_window(1000, 600)
         self.resizable(False, False)
 
-        self.theme_manager = ThemeManager()
+        self.theme_manager = manager.ThemeManager()
         self.theme_manager.change_theme('Default Dark')
         self.apply_theme()
 
-        self.page_manager = PageManager(self, self.theme)
+        self.page_manager = manager.PageManager(self, self.theme)
         self.page_manager     
 
     def apply_theme(self):
