@@ -31,6 +31,7 @@
         "active_tab_selection":"#C0C0C0",
         "separator_tab_selection":"#BBBBBB",
         "separator":"#CCCCCC",
+        "2ndseparator":"#AAAAAA",
         "switch_color":"#B2B2B2",
         "active_switch_color":"#049D56",
         "switch_border_color":"#8C8C8C",

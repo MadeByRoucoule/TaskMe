@@ -13,7 +13,7 @@ class TasksManager:
         tasks = self.load_tasks()
         for task in tasks['tasks']:
             if task['text'] == text:
-                return [task['text'], task['date'], task['hour'], task['priority']]
+                return [task['text'], task['date'], task['hour'], task['priority'], task['note']]
         return []
 
     def add_task(self, text, date, hour, priority):
@@ -23,10 +23,23 @@ class TasksManager:
                 'text': text,
                 'date': date,
                 'hour': hour,
-                'priority': priority
+                'priority': priority,
+                'note':''
             }
             tasks['tasks'].append(new_task)
             f.seek(0)
+            json.dump(tasks, f, indent=4)
+
+    def save_task(self, tasks):
+        with open(self.tasks_file_path, 'w', encoding='utf-8') as f:
+            json.dump(tasks, f, indent=4)
+
+    def delete_task(self, text):
+        with open(self.tasks_file_path, 'r+', encoding='utf-8') as f:
+            tasks = json.load(f)
+            tasks['tasks'] = [task for task in tasks['tasks'] if task['text'] != text]
+            f.seek(0)
+            f.truncate()
             json.dump(tasks, f, indent=4)
 
     def get_sorted_tasks(self, tab, sort_options):

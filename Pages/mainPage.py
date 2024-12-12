@@ -4,7 +4,7 @@ import platform
 if platform.system() == 'Windows':
     from hPyT import *
 import Widgets as widgets
-from Managers.tasksManager import TasksManager
+import Managers as manager
 
 class MainPage:
     def __init__(self, parent, theme, page_manager):
@@ -12,7 +12,7 @@ class MainPage:
         self.parent = parent
         self.theme = theme
         self.page_manager = page_manager
-        self.task_manager = TasksManager()
+        self.task_manager = manager.TasksManager()
         self.frame = tk.Frame(parent)
 
         self.current_tab = 'All'
@@ -151,7 +151,7 @@ class MainPage:
             return False
 
     def open_task_window(self, tag):
-        taskWindow = TaskWindow(self.parent, self.theme, tag)
+        taskWindow = TaskWindow(self.parent, self.theme, tag,  self)
         self.update_tasks_widgets(self.current_tab)
 
     # -- ADD TASK WINDOW -- #
@@ -186,7 +186,7 @@ class MainPage:
 
     def add_task_done(self):
 
-        task_manager = TasksManager()
+        task_manager = manager.TasksManager()
         if self.name_entry.get() != '' and self.date_entry.get() and self.hour_entry.get()!= '' and self.priority_btn.selected_option != None :
             task_manager.add_task(self.name_entry.get(), self.date_entry.get(), self.hour_entry.get(), self.priority_btn.selected_option)
             self.update_tasks_widgets()
@@ -195,10 +195,11 @@ class MainPage:
             print('Error : please enter informations')
 
 class TaskWindow():
-    def __init__(self, parent, theme, tag):
+    def __init__(self, parent, theme, tag, main_page):
         self.parent = parent
         self.theme = theme
-        self.task_manager = TasksManager()
+        self.main_page = main_page
+        self.task_manager = manager.TasksManager()
         self.width, self.height = 400, 500
         self.posx, self.posy = (self.parent.winfo_x() + self.parent.winfo_width()//2) - self.width // 2, (self.parent.winfo_y() + self.parent.winfo_height()//2) - self.height // 2
         self.infos = self.task_manager.get_task_info(tag)
@@ -218,14 +219,54 @@ class TaskWindow():
         bottom_frame.pack(side='bottom', fill='x')
 
         tk.Label(self.task_win, text=self.infos[0], font=('San Francisco', 16, 'bold'), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=10)
-        tk.Label(self.task_win, text=f"Date: {self.infos[1]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
-        tk.Label(self.task_win, text=f"Heure: {self.infos[2]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
-        tk.Label(self.task_win, text=f"Priorité: {self.infos[3]}", bg=self.theme['top_frame'], fg=self.theme['fg']).pack(pady=5)
+        
+        separator = widgets.Separator(self.task_win, color=self.theme['2ndseparator'])
+        separator.pack()
 
-        delete_btn = widgets.Button(bottom_frame, text='Delete', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], active_color=self.theme['active_red_button'], width=150)
-        delete_btn.pack(side='left', padx=5, pady=5)
-        done_btn = widgets.Button(bottom_frame, text='Done', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=150)
-        done_btn.pack(side='right', padx=5, pady=5)
+        info_frame = tk.Frame(self.task_win, bg=self.theme['top_frame'])
+        info_frame.pack(pady=20, padx=10, fill='x')
+        tk.Label(info_frame, text=f"Date: {self.infos[1]}", font=('San Francisco', 10), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(padx=10, pady=5, anchor='w')
+        tk.Label(info_frame, text=f"Heure: {self.infos[2]}", font=('San Francisco', 10), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(padx=10, pady=5, anchor='w')
+        tk.Label(info_frame, text=f"Priorité: {self.infos[3]}", font=('San Francisco', 10), bg=self.theme['top_frame'], fg=self.theme['fg']).pack(padx=10, pady=5, anchor='w')
+
+        separator = widgets.Separator(info_frame, color=self.theme['2ndseparator'])
+        separator.pack(pady=20)
+
+        self.note_area = widgets.TextArea(info_frame, height=200, color=self.theme["entry"], border_color=self.theme['entry_border'], fg=self.theme['fg'])
+        self.note_area.pack(padx=10, pady=5, fill='x')
+        self.note_area.insert(tk.END, str(self.infos[4]))
+
+        separator = widgets.Separator(self.task_win, color=self.theme['2ndseparator'])
+        separator.pack()
+
+        delete_btn = widgets.Button(bottom_frame, text='Delete', color=self.theme['red_button'], hover_color=self.theme['hover_red_button'], active_color=self.theme['active_red_button'], width=150, command=self.delete)
+        delete_btn.pack(side='left', padx=10, pady=10)
+        done_btn = widgets.Button(bottom_frame, text='Save', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=150, command=self.save)
+        done_btn.pack(side='right', padx=10, pady=10)
 
     def close_task_window(self):
         self.task_win.destroy()
+
+    def save(self):
+        updated_task = {
+            "text": self.infos[0],  
+            "date": self.infos[1],  
+            "hour": self.infos[2],  
+            "priority": self.infos[3],  
+            "note": self.note_area.get()
+        }
+
+        tasks = self.task_manager.load_tasks()
+
+        for task in tasks['tasks']:
+            if task['text'] == updated_task['text']:
+                task.update(updated_task) 
+                break
+        
+        self.task_manager.save_task(tasks)
+        self.close_task_window()
+
+    def delete(self):
+        self.task_manager.delete_task(self.infos[0])
+        self.main_page.update_tasks_widgets()
+        self.close_task_window()

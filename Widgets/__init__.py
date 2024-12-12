@@ -7,3 +7,4 @@ from .Separator import *
 from .Slider import *
 from .Switch import *
 from .TaskWidget import *
+from .TextArea import *

@@ -3,8 +3,7 @@ import platform
 if platform.system() == 'Windows':
     from hPyT import *
 import Widgets as widgets
-from Managers.themeManager import *
-from Managers.settingsManager import *
+import Managers as manager
 
 class SettingsPage:
     def __init__(self, parent, theme, page_manager):
@@ -13,9 +12,9 @@ class SettingsPage:
         self.page_manager = page_manager
         self.frame = tk.Frame(parent)
 
-        self.theme_manager = ThemeManager()
+        self.theme_manager = manager.ThemeManager()
         self.theme_names = self.theme_manager.load_themes_names()
-        self.settings_manager = SettingsManager()
+        self.settings_manager = manager.SettingsManager()
         self.settings = self.settings_manager.load_settings()
         print(self.settings['current_theme'])
 

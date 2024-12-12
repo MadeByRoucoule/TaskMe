@@ -1,52 +1,53 @@
 {
     "tasks": [
         {
-            "text": "Réunion projet développement",
+            "text": "R\u00e9union projet d\u00e9veloppement",
             "date": "30/11/2024",
             "hour": "15h00",
-            "priority": "High"
+            "priority": "High",
+            "note": "Renunion tres tres importante qui portera sur les projet de developpement"
         },
         {
-            "text": "Préparation présentation marketing",
-            "date": "30/11/2024", 
+            "text": "Pr\u00e9paration pr\u00e9sentation marketing",
+            "date": "30/11/2024",
             "hour": "14h00",
-            "priority": "Medium"
+            "priority": "Medium",
+            "note": ""
         },
         {
-            "text": "Rendez-vous médecin",
+            "text": "Rendez-vous m\u00e9decin",
             "date": "05/12/2024",
             "hour": "09h00",
-            "priority": "High"
+            "priority": "High",
+            "note": ""
         },
         {
             "text": "Achat cadeau anniversaire maman",
             "date": "20/12/2024",
             "hour": "16h00",
-            "priority": "Low"
+            "priority": "Low",
+            "note": ""
         },
         {
-            "text": "Achat cadeau anniversaire papa",
-            "date": "20/12/2024",
-            "hour": "16h00",
-            "priority": "Medium"
-        },
-        {
-            "text": "Révision code projet TaskMe",
+            "text": "R\u00e9vision code projet TaskMe",
             "date": "01/12/2024",
             "hour": "20h00",
-            "priority": "High"
+            "priority": "High",
+            "note": ""
         },
         {
             "text": "Cours de langue en ligne",
             "date": "10/12/2024",
             "hour": "18h00",
-            "priority": "Medium"
+            "priority": "Medium",
+            "note": ""
         },
         {
-            "text": "Préparation rapport financier",
+            "text": "Pr\u00e9paration rapport financier",
             "date": "28/11/2024",
             "hour": "11h00",
-            "priority": "High"
+            "priority": "High",
+            "note": ""
         }
     ]
 }
