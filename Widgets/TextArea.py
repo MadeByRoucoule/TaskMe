@@ -73,7 +73,6 @@ class TextArea:
     def insert(self, index, chars, *args):
         self.t.insert(index, chars, *args)
 
-
     # -- Utility Methods -- #
     def _get_parent_bg(self):
         window_color = self.parent.cget('bg')

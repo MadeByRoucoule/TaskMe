@@ -1,3 +1,4 @@
+from .notificationsManager import *
 from .pagesManager import *
 from .settingsManager import *
 from .tasksManager import *

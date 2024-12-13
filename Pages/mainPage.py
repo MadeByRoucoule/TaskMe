@@ -213,7 +213,7 @@ class TaskWindow():
             all_stuffs.hide(self.task_win)
             title_bar_color.set(self.task_win, self.theme['title_bar'])
 
-        self.task_win.bind("<FocusOut>", lambda e: self.close_task_window())
+        self.task_win.bind("<FocusOut>", lambda e: self.on_focus_out(e))
 
         bottom_frame = tk.Frame(self.task_win, bg=self.theme['top_frame'])
         bottom_frame.pack(side='bottom', fill='x')
@@ -244,6 +244,10 @@ class TaskWindow():
         done_btn = widgets.Button(bottom_frame, text='Save', color=self.theme['green_button'], hover_color=self.theme['hover_green_button'], active_color=self.theme['active_green_button'], width=150, command=self.save)
         done_btn.pack(side='right', padx=10, pady=10)
 
+    def on_focus_out(self, event):
+        if not self.task_win.focus_displayof():
+            self.close_task_window()
+    
     def close_task_window(self):
         self.task_win.destroy()
 

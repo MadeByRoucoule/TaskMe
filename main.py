@@ -1,6 +1,7 @@
 # -- Imports -- #
 import tkinter as tk
 import platform
+from datetime import datetime, timedelta
 if platform.system() == 'Windows':
     from hPyT import *
 # -- Managers -- #
@@ -16,6 +17,15 @@ class App(tk.Tk):
         self.theme_manager = manager.ThemeManager()
         self.theme_manager.change_theme('Default Dark')
         self.apply_theme()
+
+        self.notif_manager = manager.NotificationManager()
+        self.notif_manager.start()
+
+        self.notif_manager.add_notification(
+            title="Notification Manager",
+            message="This is the message for the notification, but I don't know the maximum width for the message in the notification.",
+            date_time=datetime.now() + timedelta(seconds=5)
+        )
 
         self.page_manager = manager.PageManager(self, self.theme)
         self.page_manager     
