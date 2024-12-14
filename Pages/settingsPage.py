@@ -16,7 +16,6 @@ class SettingsPage:
         self.theme_names = self.theme_manager.load_themes_names()
         self.settings_manager = manager.SettingsManager()
         self.settings = self.settings_manager.load_settings()
-        print(self.settings['current_theme'])
 
         self.title_font = ('San Francisco', 10, 'bold')
 

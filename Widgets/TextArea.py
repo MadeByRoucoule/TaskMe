@@ -84,8 +84,17 @@ class TextArea:
         self.c.pack(**kwargs)
         if "fill" in kwargs:
             self.c.bind("<Configure>", self._on_resize)
-
+    def pack_forget(self, **kwargs):
+        self.c.pack_forget(**kwargs)
+    
+    def place(self, **kwargs):
+        self.c.place(**kwargs)
+    def place_forget(self, **kwargs):
+        self.c.place_forget(**kwargs)
+    
     def grid(self, **kwargs):
         self.c.grid(**kwargs)
         if "fill" in kwargs:
             self.c.bind("<Configure>", self._on_resize)
+    def grid_forget(self, **kwargs):
+        self.c.grid_forget(**kwargs)

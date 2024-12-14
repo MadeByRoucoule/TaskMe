@@ -13,6 +13,8 @@ class MainPage:
         self.theme = theme
         self.page_manager = page_manager
         self.task_manager = manager.TasksManager()
+        self.notif_manager = manager.NotificationManager()
+        self.notif_manager.start()
         self.frame = tk.Frame(parent)
 
         self.current_tab = 'All'
@@ -78,12 +80,15 @@ class MainPage:
             tab = self.current_tab
         for widget in self.main_frame.winfo_children():
             widget.destroy()
-        
-        tasks = self.task_manager.get_sorted_tasks(tab, self.current_sort_options)
+        try:
+            tasks = self.task_manager.get_sorted_tasks(tab, self.current_sort_options)
+        except Exception as e:
+            tasks = []
 
         y = 10
         x = 10
         tasks_per_row = 3
+
         for task in tasks:
             w = widgets.TaskWidget(
                 self.main_frame,
@@ -109,6 +114,27 @@ class MainPage:
             else:
                 x += 260
 
+            self.add_notification_for_task(task)
+
+    def add_notification_for_task(self, task):
+        try:
+            task_date = task.get('date')
+            task_time = task.get('hour')
+            if not task_date or not task_time:
+                return
+
+            formatted_datetime = f"{task_date} {task_time.replace('h', ':')}"
+            notification_datetime = datetime.strptime(formatted_datetime, "%d/%m/%Y %H:%M")
+
+            if (notification_datetime > datetime.now()) and (task['text'] not in [n['title'] for n in self.notif_manager.notifications]):
+                self.notif_manager.add_notification(
+                    title=task['text'],
+                    message=task['note'] if task['note'] else "Pas de note disponible",
+                    date_time=notification_datetime
+                )
+        except Exception as e:
+            pass
+
     def update_sort_options(self, selected_options):
         for option in ['Time', 'Priority']:
             if option in selected_options and option not in self.current_sort_options:
@@ -125,7 +151,6 @@ class MainPage:
             task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
             return task_date == today
         except ValueError: 
-            print(f"Date invalide: {date_str}")
             return False
         
     def is_future(self, date_str):
@@ -136,7 +161,6 @@ class MainPage:
             task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
             return task_date > today
         except ValueError:
-            print(f"Date invalide: {date_str}")
             return False
     
     def is_before(self, date_str):
@@ -147,7 +171,6 @@ class MainPage:
             task_date = datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
             return task_date < today
         except ValueError:
-            print(f"Date invalide: {date_str}")
             return False
 
     def open_task_window(self, tag):

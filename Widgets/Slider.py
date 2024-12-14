@@ -30,7 +30,7 @@ class Slider:
         # -- Label Creation -- #
         if text_value == True:
             self.value_label = tk.Label(self.f, text=str(self.value), bg=self.bg, fg=self.fg, width=5)
-            self.value_label.pack(side='right')  # Placer le label à gauche du slider
+            self.value_label.pack(side='right')
 
         # -- Slider specific variables -- #
         self.slider_radius = 10
@@ -117,7 +117,7 @@ class Slider:
         x = self._value_to_x()
         self._update_slider(x)
 
-    # Méthodes de layout standard
+    # -- Layout Methods -- #
     def pack(self, **kwargs):
         self.f.pack(**kwargs)
     def pack_forget(self, **kwargs):
