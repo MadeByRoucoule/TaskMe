@@ -60,8 +60,10 @@ class MenuButton:
     def _binds(self):
         self.c.tag_bind('hitbox', '<Enter>', lambda e: self._btn_hover('enter'))
         self.c.tag_bind('hitbox', '<Leave>', lambda e: self._btn_hover('leave'))
+        self.c.tag_bind('hitbox', '<Leave>', self.check_focus)
         self.c.tag_bind('hitbox', '<Button-1>', lambda e: self._btn_click('click'))
         self.c.tag_bind('hitbox', '<ButtonRelease-1>', lambda e: self._btn_click('release'))
+        
 
     def _btn_click(self, state: str):
         if state == 'release':

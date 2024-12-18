@@ -15,7 +15,7 @@ class App(tk.Tk):
         self.resizable(False, False)
 
         self.theme_manager = manager.ThemeManager()
-        self.theme_manager.change_theme('Default Dark')
+        self.theme_manager.change_theme('Default Light')
         self.apply_theme()
 
         self.page_manager = manager.PageManager(self, self.theme)

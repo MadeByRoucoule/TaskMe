@@ -54,7 +54,7 @@ class MainPage:
         settings_btn = widgets.Button(self.top_frame, text='Settings', color=self.theme['button'], hover_color=self.theme['hover_button'], active_color=self.theme['active_button'], fg=self.theme['fg'], width=100, font=('San Francisco', 10, 'bold'), command=self.settings_command)
         settings_btn.place(x=120, y=10)
 
-        sorted_menubutton = widgets.MultipleMenuButton(self.top_frame, text='Sorted by', color=self.theme["menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], options=['Time', 'Priority'], width=150, command=self.update_sort_options)
+        sorted_menubutton = widgets.MultipleMenuButton(self.top_frame, text='Sorted by', color=self.theme["top_menu_button"], hover_color=self.theme["hover_menu_button"], fg=self.theme['fg'], option_color=self.theme['menu_button_option'], options=['Time', 'Priority'], width=150, command=self.update_sort_options)
         sorted_menubutton.place(x=840, y=10)
 
         tab_selection = widgets.SelectionTab(self.left_frame, hover_color=self.theme['hover_tab_selection'], active_color=self.theme['active_tab_selection'], separator_color=self.theme['separator_tab_selection'], fg=self.theme['fg'], width=190, tabs_name=['All', 'Today', 'Later', 'Before'], tabs_command=[lambda: self.tabs_commands('All'), lambda: self.tabs_commands('Today'), lambda: self.tabs_commands('Later'), lambda: self.tabs_commands('Before')])
